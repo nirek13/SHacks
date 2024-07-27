@@ -1,54 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { Sphere, Html } from '@react-three/drei';
-import '../Meditation.css';
+// MeditationScene.jsx
+import React, { useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Sphere, Box, useTexture } from '@react-three/drei';
+import * as THREE from 'three';
 
-const BreathingExercise = ({ inhaleDuration, exhaleDuration, holdDuration }) => {
-    const [phase, setPhase] = useState('inhale'); // inhale, exhale, hold
-    const [timer, setTimer] = useState(inhaleDuration);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTimer((prev) => {
-                if (prev > 0) return prev - 1;
-
-                switch (phase) {
-                    case 'inhale':
-                        setPhase('hold');
-                        return holdDuration;
-                    case 'hold':
-                        setPhase('exhale');
-                        return exhaleDuration;
-                    case 'exhale':
-                        setPhase('inhale');
-                        return inhaleDuration;
-                    default:
-                        return inhaleDuration;
-                }
-            });
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [phase, inhaleDuration, exhaleDuration, holdDuration]);
-
+// Rotating Sphere Component
+const RotatingSphere = () => {
+    const sphereRef = useRef();
+    useFrame(() => {
+        if (sphereRef.current) {
+            sphereRef.current.rotation.y += 0.01;
+        }
+    });
     return (
-        <div className="breathing-exercise">
-            <Canvas>
-                <ambientLight />
-                <pointLight position={[10, 10, 10]} />
-                <Sphere args={[1, 32, 32]}>
-                    <meshStandardMaterial color="#76c7c0" />
-                    <Html center>
-                        <div className="instructions">
-                            {phase === 'inhale' && <p>Inhale</p>}
-                            {phase === 'hold' && <p>Hold</p>}
-                            {phase === 'exhale' && <p>Exhale</p>}
-                        </div>
-                    </Html>
-                </Sphere>
-            </Canvas>
-        </div>
+        <Sphere ref={sphereRef} args={[1, 64, 64]} position={[0, 0, 0]}>
+            <meshStandardMaterial color="#87CEFA" />
+        </Sphere>
     );
 };
 
-export default BreathingExercise;
+// Floating Particles Component
+const FloatingParticles = () => {
+    const particleCount = 1000;
+    const particles = Array.from({ length: particleCount }).map(() => ({
+        position: [
+            Math.random() * 10 - 5,
+            Math.random() * 10 - 5,
+            Math.random() * 10 - 5,
+        ],
+        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+    }));
+
+    return (
+        <>
+            {particles.map((particle, index) => (
+                <mesh key={index} position={particle.position}>
+                    <sphereGeometry args={[0.05, 8, 8]} />
+                    <meshBasicMaterial color={particle.color} />
+                </mesh>
+            ))}
+        </>
+    );
+};
+
+// Meditation Scene Component
+const MeditationScene = () => {
+    return (
+        <Canvas
+            style={{ height: '100vh', width: '100vw', background: '#B0E0E6' }}
+            camera={{ position: [0, 0, 5] }}
+        >
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} intensity={1} />
+            <RotatingSphere />
+            <FloatingParticles />
+        </Canvas>
+    );
+};
+
+export default MeditationScene;

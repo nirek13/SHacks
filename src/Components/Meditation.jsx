@@ -1,4 +1,3 @@
-// MeditationScene.jsx
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
@@ -10,11 +9,16 @@ const RotatingSphere = ({ prompt, mousePosition }) => {
     const [scale, setScale] = useState(1);
     const [color, setColor] = useState('#87CEFA');
 
-    useFrame(() => {
+    useFrame(({ clock }) => {
         if (sphereRef.current) {
             // Adjust sphere rotation based on mouse position
             sphereRef.current.rotation.y = mousePosition.x * 0.05;
             sphereRef.current.rotation.x = mousePosition.y * 0.05;
+
+            // Animate sphere scale for a peaceful effect
+            const time = clock.getElapsedTime();
+            const oscillation = Math.sin(time * 2) * 0.1 + 1;
+            sphereRef.current.scale.set(scale * oscillation, scale * oscillation, scale * oscillation);
         }
     });
 
@@ -45,7 +49,7 @@ const RotatingSphere = ({ prompt, mousePosition }) => {
     }, [prompt]);
 
     return (
-        <Sphere ref={sphereRef} args={[1, 64, 64]} scale={[scale, scale, scale]}>
+        <Sphere ref={sphereRef} args={[1, 64, 64]}>
             <meshStandardMaterial color={color} />
         </Sphere>
     );
@@ -54,14 +58,22 @@ const RotatingSphere = ({ prompt, mousePosition }) => {
 // Floating Particles Component
 const FloatingParticles = ({ prompt }) => {
     const particleCount = 1000;
-    const distance = prompt === 'inhale' ? 8 : prompt === 'exhale' ? 12 : prompt === 'calm' ? 10 : 10;
+    const baseDistance = 1.5; // Base distance for particles from the center
+    const distance = prompt === 'inhale' ? baseDistance * 1.2 : prompt === 'exhale' ? baseDistance * 1.5 : baseDistance;
+
+    // Function to generate random spherical coordinates
+    const generateSphericalCoordinates = () => {
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const x = distance * Math.sin(phi) * Math.cos(theta);
+        const y = distance * Math.sin(phi) * Math.sin(theta);
+        const z = distance * Math.cos(phi);
+        return [x, y, z];
+    };
+
     const particles = Array.from({ length: particleCount }).map(() => ({
-        position: [
-            Math.random() * distance - distance / 2,
-            Math.random() * distance - distance / 2,
-            Math.random() * distance - distance / 2,
-        ],
-        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+        position: generateSphericalCoordinates(),
+        color: '#FFFFFF', // White
     }));
 
     return (
@@ -75,6 +87,7 @@ const FloatingParticles = ({ prompt }) => {
         </>
     );
 };
+
 
 // Text Overlay Component
 const TextOverlay = ({ prompt }) => {
@@ -96,9 +109,6 @@ const TextOverlay = ({ prompt }) => {
         </div>
     );
 };
-
-// Audio Component
-
 
 // Main Scene Component
 const MeditationScene = () => {
@@ -140,7 +150,6 @@ const MeditationScene = () => {
                 <FloatingParticles prompt={prompt} />
             </Canvas>
             <TextOverlay prompt={prompt} />
-
         </div>
     );
 };

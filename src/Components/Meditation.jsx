@@ -4,10 +4,9 @@ import { Sphere } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Rotating Sphere Component
-const RotatingSphere = ({ prompt, mousePosition }) => {
+const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor }) => {
     const sphereRef = useRef();
     const [scale, setScale] = useState(1);
-    const [color, setColor] = useState('#87CEFA');
 
     useFrame(({ clock }) => {
         if (sphereRef.current) {
@@ -18,7 +17,11 @@ const RotatingSphere = ({ prompt, mousePosition }) => {
             // Animate sphere scale for a peaceful effect
             const time = clock.getElapsedTime();
             const oscillation = Math.sin(time * 2) * 0.1 + 1;
-            sphereRef.current.scale.set(scale * oscillation, scale * oscillation, scale * oscillation);
+            const newScale = scale * oscillation;
+            sphereRef.current.scale.set(newScale, newScale, newScale);
+
+            // Update scale state
+            setSphereScale(newScale);
         }
     });
 
@@ -27,41 +30,43 @@ const RotatingSphere = ({ prompt, mousePosition }) => {
         switch (prompt) {
             case 'inhale':
                 setScale(1.5);
-                setColor('#87CEFA'); // Light Blue
+                setSphereColor('#87CEFA'); // Light Blue
                 break;
             case 'exhale':
                 setScale(1);
-                setColor('#00BFFF'); // Deep Sky Blue
+                setSphereColor('#00BFFF'); // Deep Sky Blue
                 break;
             case 'let go of stress':
                 setScale(1.2);
-                setColor('#FFD700'); // Gold
+                setSphereColor('#FFD700'); // Gold
                 break;
             case 'calm':
                 setScale(1.3);
-                setColor('#90EE90'); // Light Green
+                setSphereColor('#90EE90'); // Light Green
                 break;
             default:
                 setScale(1);
-                setColor('#87CEFA'); // Default color
+                setSphereColor('#87CEFA'); // Default color
                 break;
         }
     }, [prompt]);
 
     return (
         <Sphere ref={sphereRef} args={[1, 64, 64]}>
-            <meshStandardMaterial color={color} />
+            <meshStandardMaterial color={sphereColor} />
         </Sphere>
     );
 };
 
 // Floating Particles Component
-const FloatingParticles = ({ prompt }) => {
+const FloatingParticles = ({ sphereScale, sphereColor }) => {
     const particleCount = 1000;
     const baseDistance = 1.5; // Base distance for particles from the center
-    const distance = prompt === 'inhale' ? baseDistance * 1.2 : prompt === 'exhale' ? baseDistance * 1.5 : baseDistance;
 
-    // Function to generate random spherical coordinates
+    // Calculate the distance of particles from the center based on sphere scale
+    const distance = sphereScale * baseDistance;
+
+    // Function to generate spherical coordinates
     const generateSphericalCoordinates = () => {
         const theta = Math.random() * 2 * Math.PI;
         const phi = Math.acos(2 * Math.random() - 1);
@@ -73,7 +78,7 @@ const FloatingParticles = ({ prompt }) => {
 
     const particles = Array.from({ length: particleCount }).map(() => ({
         position: generateSphericalCoordinates(),
-        color: '#FFFFFF', // White
+        color: sphereColor, // Sync color with sphere
     }));
 
     return (
@@ -87,7 +92,6 @@ const FloatingParticles = ({ prompt }) => {
         </>
     );
 };
-
 
 // Text Overlay Component
 const TextOverlay = ({ prompt }) => {
@@ -114,6 +118,9 @@ const TextOverlay = ({ prompt }) => {
 const MeditationScene = () => {
     const [prompt, setPrompt] = useState('inhale');
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [sphereScale, setSphereScale] = useState(1);
+    const [sphereColor, setSphereColor] = useState('#87CEFA'); // Initial color
+    const sphereRef = useRef();
 
     useEffect(() => {
         // Cycle through prompts every 4 seconds
@@ -146,8 +153,16 @@ const MeditationScene = () => {
             >
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} intensity={1} />
-                <RotatingSphere prompt={prompt} mousePosition={mousePosition} />
-                <FloatingParticles prompt={prompt} />
+                <RotatingSphere
+                    prompt={prompt}
+                    mousePosition={mousePosition}
+                    setSphereScale={setSphereScale}
+                    setSphereColor={setSphereColor}
+                />
+                <FloatingParticles
+                    sphereScale={sphereScale}
+                    sphereColor={sphereColor}
+                />
             </Canvas>
             <TextOverlay prompt={prompt} />
         </div>

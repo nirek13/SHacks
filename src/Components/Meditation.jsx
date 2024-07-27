@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
 import * as THREE from 'three';
@@ -65,30 +65,34 @@ const FloatingParticles = ({ sphereScale, sphereColor }) => {
     const particleCount = 1000;
     const baseDistance = 1.5; // Base distance for particles from the center
 
+    // Precompute the spherical coordinates for particle positions
+    const particles = useMemo(() => {
+        const baseDistance = 1.5; // Base distance for particles
+        const generateSphericalCoordinates = (distance) => {
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const x = distance * Math.sin(phi) * Math.cos(theta);
+            const y = distance * Math.sin(phi) * Math.sin(theta);
+            const z = distance * Math.cos(phi);
+            return [x, y, z];
+        };
+
+        const initialDistance = baseDistance; // Initial distance
+        return Array.from({ length: particleCount }).map(() => ({
+            position: generateSphericalCoordinates(initialDistance),
+            color: sphereColor,
+        }));
+    }, [sphereColor]); // Only depend on color for initial generation
+
     // Calculate the distance of particles from the center based on sphere scale
     const distance = sphereScale * baseDistance;
-
-    // Function to generate spherical coordinates
-    const generateSphericalCoordinates = () => {
-        const theta = Math.random() * 2 * Math.PI;
-        const phi = Math.acos(2 * Math.random() - 1);
-        const x = distance * Math.sin(phi) * Math.cos(theta);
-        const y = distance * Math.sin(phi) * Math.sin(theta);
-        const z = distance * Math.cos(phi);
-        return [x, y, z];
-    };
-
-    const particles = Array.from({ length: particleCount }).map(() => ({
-        position: generateSphericalCoordinates(),
-        color: sphereColor, // Sync color with sphere
-    }));
 
     return (
         <>
             {particles.map((particle, index) => (
-                <mesh key={index} position={particle.position}>
+                <mesh key={index} position={particle.position.map(coord => coord * distance)}>
                     <sphereGeometry args={[0.05, 8, 8]} />
-                    <meshBasicMaterial color={particle.color} />
+                    <meshBasicMaterial color={sphereColor} />
                 </mesh>
             ))}
         </>

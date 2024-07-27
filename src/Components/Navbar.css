@@ -47,8 +47,11 @@
   /* Icon styling */
   .navbar-icon {
     margin-right: 0.5rem;
-    font-size: 1.2rem;
-    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease; /* Smooth transitions */
+    font-size: 1.5rem; /* Adjusted size */
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions */
+    border: 2px solid transparent; /* Default border */
+    border-radius: 50%; /* Make it circular */
+    padding: 0.3rem; /* Space inside border */
   }
   
   /* Apply the hover effect to the icon */
@@ -56,10 +59,14 @@
     color: #00ffea; /* Shiny effect color */
     transform: scale(1.2); /* Pop effect */
     text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
+    border-color: #00ffea; /* Border color on hover */
   }
   
   /* Logo hover effect */
   .navbar-logo {
+    left: 0;
+    padding-left: 24px;
+    position: absolute;
     color: #00ddfa; /* Default color */
     text-decoration: none;
     font-size: 2rem;

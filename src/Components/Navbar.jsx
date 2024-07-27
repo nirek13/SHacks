@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Navbar.css';
+import { FaHome, FaUser, FaCogs, FaEnvelope } from 'react-icons/fa';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,25 +19,25 @@ function Navbar() {
         <ul className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
           <li className="navbar-item">
             <a href="/" className="navbar-link">
-              <i className="fas fa-home navbar-icon"></i>
+              <FaHome className="navbar-icon" />
               Meditate
             </a>
           </li>
           <li className="navbar-item">
             <a href="/about" className="navbar-link">
-              <i className="fas fa-user navbar-icon"></i>
+              <FaUser className="navbar-icon" />
               Milestones
             </a>
           </li>
           <li className="navbar-item">
             <a href="/services" className="navbar-link">
-              <i className="fas fa-cogs navbar-icon"></i>
+              <FaCogs className="navbar-icon" />
               Social Journal
             </a>
           </li>
           <li className="navbar-item">
             <a href="/contact" className="navbar-link">
-              <i className="fas fa-envelope navbar-icon"></i>
+              <FaEnvelope className="navbar-icon" />
               My Account
             </a>
           </li>

@@ -1,24 +1,16 @@
-import logo from './logo.svg';
+import React from 'react';
+import MeditationSession from './Components/Meditation';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+        <MeditationSession
+            title="Guided Meditation for Relaxation"
+            audioSrc="path/to/your/audio/file.mp3"
+            duration={300} // duration in seconds
+        />
+      </div>
   );
 }
 

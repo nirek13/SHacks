@@ -1,6 +1,6 @@
 .navbar {
     position: relative;
-    background-color: #87CEFA;
+    background-color: #87cefa;
     padding: 1.2rem;
 }
 
@@ -57,7 +57,7 @@
 /* Hover effect for icons */
 .navbar-link:hover .navbar-icon {
     color: #e7e7e7; /* Shiny effect color */
-    transform: scale(1.2); /* Pop effect */
+    transform: scale(1.14); /* Pop effect */
     text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
     border-color: #e7e7e7; /* Border color on hover */
 }
@@ -77,7 +77,7 @@
 /* Hover effect for logo */
 .navbar-logo:hover {
     color: #e7e7e7; /* Shiny effect color */
-    transform: scale(1.2); /* Pop effect */
+    transform: scale(1.075); /* Pop effect */
     text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
 }
 

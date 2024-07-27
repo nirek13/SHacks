@@ -7,6 +7,7 @@ import * as THREE from 'three';
 const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor }) => {
     const sphereRef = useRef();
     const [scale, setScale] = useState(1);
+    const [color, setColor] = useState('#87CEFA'); // Initial color
 
     useFrame(({ clock }) => {
         if (sphereRef.current) {
@@ -20,8 +21,9 @@ const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor 
             const newScale = scale * oscillation;
             sphereRef.current.scale.set(newScale, newScale, newScale);
 
-            // Update scale state
+            // Update scale and color states
             setSphereScale(newScale);
+            setSphereColor(color);
         }
     });
 
@@ -30,30 +32,30 @@ const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor 
         switch (prompt) {
             case 'inhale':
                 setScale(1.5);
-                setSphereColor('#87CEFA'); // Light Blue
+                setColor('#87CEFA'); // Light Blue
                 break;
             case 'exhale':
                 setScale(1);
-                setSphereColor('#00BFFF'); // Deep Sky Blue
+                setColor('#00BFFF'); // Deep Sky Blue
                 break;
             case 'let go of stress':
                 setScale(1.2);
-                setSphereColor('#FFD700'); // Gold
+                setColor('#FFD700'); // Gold
                 break;
             case 'calm':
                 setScale(1.3);
-                setSphereColor('#90EE90'); // Light Green
+                setColor('#90EE90'); // Light Green
                 break;
             default:
                 setScale(1);
-                setSphereColor('#87CEFA'); // Default color
+                setColor('#87CEFA'); // Default color
                 break;
         }
     }, [prompt]);
 
     return (
         <Sphere ref={sphereRef} args={[1, 64, 64]}>
-            <meshStandardMaterial color={sphereColor} />
+            <meshStandardMaterial color={color} />
         </Sphere>
     );
 };
@@ -120,7 +122,6 @@ const MeditationScene = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [sphereScale, setSphereScale] = useState(1);
     const [sphereColor, setSphereColor] = useState('#87CEFA'); // Initial color
-    const sphereRef = useRef();
 
     useEffect(() => {
         // Cycle through prompts every 4 seconds

@@ -196,6 +196,23 @@ const getNextChatTableNumber = () => {
     });
 };
 
+app.post('/api/createReply', (req, res) => {
+    const { username, message, chatTableName, postId } = req.body;
+
+    if (!username || !message || !chatTableName || !postId) {
+        console.log(username, message, chatTableName, postId)
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    db.run(`INSERT INTO "${chatTableName}" (username, message, post) VALUES (?, ?, ?)`, [username, message, false], function (err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error inserting into chat table', message: err.message });
+        }
+        res.status(201).json({ message: 'Reply posted successfully' });
+    });
+});
+
+
 app.post("/api/createPost", async (req, res) => {
     try {
         const { username, message } = req.body;

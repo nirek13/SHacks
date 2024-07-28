@@ -96,12 +96,12 @@ const Tweet = ({ tweet }) => {
         if (reply.trim()) {
             try {
                 const username = localStorage.getItem("username");
-
+                console.log(tweet)
                 const response = await axios.post('http://localhost:1000/api/createReply', {
                     username: username,
                     message: reply,
-                    chatTableName: tweet.chatTableName,
-                    postId: tweet.id
+                    chatTableName: tweet.table_name,
+                    postId: tweet.post
                 });
 
                 console.log('Reply posted successfully:', response.data);

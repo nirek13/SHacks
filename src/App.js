@@ -8,11 +8,13 @@ import Register from "./Components/Register";
 import Login from "./Components/Login";
 import Home from "./Components/Home";
 import GlobalJournal from "./Components/GlobalJournal";
+
+import SideBar from './Components/SideBar';
 function App() {
     return (
         <Router>
             <div className="App">
-                <Navbar />
+                <SideBar />
                 <Routes>
 
                     <Route path="/" element={<Home/>} />

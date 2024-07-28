@@ -1,0 +1,12 @@
+.circular-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    margin: auto;
+    object-fit: cover; /* Ensures the image covers the entire circle without distortion */
+}
+.navbar-menu {
+    display: flex;
+    flex-direction: column;
+}

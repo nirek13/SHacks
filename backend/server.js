@@ -30,19 +30,30 @@ const db = new sqlite3.Database('../db/collection.db', (err) => {
         console.error('Error opening database:', err.message);
     } else {
         console.log('Connected to the SQLite database.');
-        createTable(); // Call the function to create the table after connecting to the database
+        dropTable(); // Call the function to create the table after connecting to the database
     }
 });
 
+const dropTable = () => {
+    db.run('DROP TABLE IF EXISTS users', (err) => {
+        if (err) {
+            console.error('Error dropping table:', err.message);
+        } else {
+            console.log('Users table dropped successfully.');
+            createTable(); // Create the table after dropping it
+        }
+    });
+};
+
 const createTable = () => {
-    db.run('CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, index INTEGER  )', (err) => {
+    db.run('CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, user_index INTEGER)', (err) => {
         if (err) {
             console.error('Error creating table:', err.message);
         } else {
             console.log('Users table created successfully.');
         }
     });
-}
+};
 // Write data to a file
 const writeData = (file, data) => {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));

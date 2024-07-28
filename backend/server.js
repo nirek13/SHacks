@@ -4,10 +4,9 @@ const cors = require('cors');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const PORT = 1000;
-
-const sqlite3 = require('sqlite3')
 
 const SECRET_KEY = 'your_secret_key';
 const usersFile = './users.json';
@@ -15,15 +14,6 @@ const challengesFile = './challenges.json';
 
 app.use(bodyParser.json());
 app.use(cors());
-
-// Read data from a file
-const readData = (file) => {
-    if (fs.existsSync(file)) {
-        const data = fs.readFileSync(file);
-        return JSON.parse(data);
-    }
-    return [];
-};
 
 const db = new sqlite3.Database('../db/collection.db', (err) => {
     if (err) {
@@ -33,6 +23,21 @@ const db = new sqlite3.Database('../db/collection.db', (err) => {
         dropTable(); // Call the function to create the table after connecting to the database
     }
 });
+
+const readData = (file) => {
+    console.log("shit")
+    if (fs.existsSync(file)) {
+        const data = fs.readFileSync(file);
+        return JSON.parse(data);
+    }
+    console.log("shit2")
+
+    return [];
+};
+
+const writeData = (file, data) => {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+};
 
 const dropTable = () => {
     db.run('DROP TABLE IF EXISTS users', (err) => {
@@ -54,28 +59,63 @@ const createTable = () => {
         }
     });
 };
-// Write data to a file
-const writeData = (file, data) => {
-    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+
+const getLastIndexOfUsers = () => {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT MAX(user_index) as maxIndex FROM users', (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row ? row.maxIndex : 0);
+            }
+        });
+    });
 };
 
-// User registration
 app.post('/api/register', async (req, res) => {
-    const { username, password } = req.body;
-    const users = readData(usersFile);
+    try {
+        const { username, password } = req.body;
+        console.log("f")
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Username and password are required' });
+        }
+        console.log("fuck")
+        try {
+            const users = readData(usersFile);
+            if (users.find(user => user.username === username)) {
+                return res.status(400).json({ error: 'Username already exists' });
+            }
+    
+            const hashedPassword = await bcrypt.hash(password, 10);
+            users.push({ username, password: hashedPassword });
+            writeData(usersFile, users);
+        } catch {
+            console.log("d")
+        }
+        
+        console.log("u")
+        
+        console.log("c")
+        let lastIndex;
+        try {
+            lastIndex = await getLastIndexOfUsers();
+        } catch (err) {
+            return res.status(500).json({ error: 'Database error', message: err.message });
+        }
+        console.log("k")
+        const userIndex = lastIndex + 1;
 
-    if (users.find(user => user.username === username)) {
-        return res.status(400).json({ error: 'Username already exists' });
+        db.run('INSERT INTO users (username, user_index) VALUES (?, ?)', [username, userIndex], (err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error inserting into database', message: err.message });
+            }
+            res.status(201).json({ message: 'User registered successfully' });
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error', message: err.message });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashedPassword });
-    writeData(usersFile, users);
-
-    res.status(201).json({ message: 'User registered successfully' });
 });
 
-// User login
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     const users = readData(usersFile);
@@ -89,7 +129,6 @@ app.post('/api/login', async (req, res) => {
     res.json({ token });
 });
 
-// Middleware to authenticate requests
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
@@ -104,13 +143,11 @@ const authenticate = (req, res, next) => {
     }
 };
 
-// Get all challenges
 app.get('/api/challenges', authenticate, (req, res) => {
     const challenges = readData(challengesFile);
     res.json(challenges);
 });
 
-// Add a new challenge
 app.post('/api/challenges', authenticate, (req, res) => {
     const newChallenge = req.body;
     const challenges = readData(challengesFile);
@@ -119,7 +156,6 @@ app.post('/api/challenges', authenticate, (req, res) => {
     res.status(201).json(newChallenge);
 });
 
-// Join a challenge
 app.post('/api/challenges/:index/join', authenticate, (req, res) => {
     const { index } = req.params;
     const { userName } = req.body;

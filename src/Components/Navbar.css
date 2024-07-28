@@ -1,110 +1,72 @@
+/* Navbar.css */
+
 .navbar {
+    background-color: #bd1c1c;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 50%; /* Circular shape */
+    padding: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    background-color: #87cefa;
-    padding: 1.2rem;
+    margin: 20px auto; /* Center horizontally on the page */
+    overflow: hidden; /* Ensure child elements are contained within the circular shape */
 }
 
-/* Container to align items and control spacing */
 .navbar-container {
     display: flex;
-    justify-content: flex-end; /* Aligns items to the right */
-    padding-left: 400px;
+    flex-direction: column;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
+    justify-content: center;
+    width: 100%;
+    height: 70%;
 }
 
-/* Style for the navigation menu */
-.navbar-menu {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-}
-
-/* Style for individual menu items */
-.navbar-item {
-    margin-left: 1.2rem;
-    position: relative;
-}
-
-/* Link styling with transitions */
-.navbar-link {
-    color: black; /* Default color */
-    text-decoration: none;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
-}
-
-/* Hover effect for links */
-.navbar-link:hover {
-    color: black;
-}
-
-/* Icon styling with border */
-.navbar-icon {
-    margin-right: 0.5rem;
-    padding-left: 100px;
-    font-size: 1.5rem; /* Adjusted size */
-    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions */
-    border: 2px solid transparent; /* Default border */
-    border-radius: 50%; /* Circular border */
-    padding: 0.3rem; /* Space inside border */
-}
-
-/* Hover effect for icons */
-.navbar-link:hover .navbar-icon {
-    color: #e7e7e7; /* Shiny effect color */
-    transform: scale(1.14); /* Pop effect */
-    text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
-    border-color: #e7e7e7; /* Border color on hover */
-}
-
-/* Logo styling */
 .navbar-logo {
-    position: absolute; /* Positioned on the left */
-    left: 0;
-    padding-left: 24px;
-    color: #FFFF; /* Default color */
-    text-decoration: none;
-    font-size: 2rem;
-    font-weight: bolder;
-    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease; /* Smooth transitions */
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-/* Hover effect for logo */
-.navbar-logo:hover {
-    color: #e7e7e7; /* Shiny effect color */
-    transform: scale(1.075); /* Pop effect */
-    text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
+.navbar-icon2 {
+    height: 60px; /* Adjust the size to fit well within the circle */
 }
 
-/* Toggler for mobile view */
 .navbar-toggler {
-    display: none; /* Hide by default */
+    position: absolute;
+    top: 10px;
+    right: 10px;
     background: none;
     border: none;
-    color: #FFFF;
-    font-size: 2rem;
+    font-size: 24px;
+    cursor: pointer;
 }
 
-/* Mobile styles */
-@media screen and (max-width: 768px) {
-    .navbar-menu {
-        flex-direction: column;
-        display: none;
-    }
+.navbar-menu {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0de79d;
 
-    .navbar-menu.active {
-        display: flex;
-    }
 
-    .navbar-toggler {
-        display: block;
-    }
 }
-.navbar-item:nth-of-type(1) {
-    margin-top: 32px;
+
+.navbar-menu.active {
+    display: flex;
+}
+
+.navbar-item {
+    margin: 5px 0;
+}
+
+.navbar-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+}
+
+.navbar-icon {
+    margin-right: 5px;
 }

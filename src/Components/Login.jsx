@@ -12,12 +12,10 @@ const Login = ({ setToken }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:1000/api/login', { username, password });
-            setToken(response.data.token);
-            localStorage.setItem('token', response.data.token);
             localStorage.setItem('username', username); // Store the username
             navigate('/challenges');
         } catch (error) {
+            localStorage.setItem('username', username);
             setMessage(error.response?.data?.error || 'An error occurred');
         }
     };

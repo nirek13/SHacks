@@ -1,27 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Journal = () => {
     const [tweet, setTweet] = useState('');
-    const [tweets, setTweets] = useState([
-        { id: 1, content: 'Hello World!' },
-        { id: 2, content: 'This is my second tweet!' },
-    ]);
+    const [tweets, setTweets] = useState([]);
+
+    useEffect(() => {
+        const fetchTweets = async () => {
+            try {
+                const response = await axios.get('http://localhost:1000/api/feed');
+                setTweets(response.data);
+            } catch (error) {
+                console.error('Error fetching tweets:', error);
+            }
+        };
+
+        fetchTweets();
+    }, []);
 
     const handleTweetChange = (e) => {
         setTweet(e.target.value);
     };
 
-    const handleTweetSubmit = (e) => {
+    const handleTweetSubmit = async (e) => {
         e.preventDefault();
         if (tweet.trim()) {
-            setTweets([{ id: Date.now(), content: tweet }, ...tweets]);
-            setTweet('');
+            try {
+                const username = localStorage.getItem("username");
+
+                const response = await axios.post('http://localhost:1000/api/createPost', {
+                    username: username, // Replace with actual username
+                    message: tweet,
+                });
+
+                // Add the new tweet to the list
+                setTweets([response.data, ...tweets]);
+                setTweet('');
+            } catch (error) {
+                console.error('Error posting tweet:', error);
+            }
         }
     };
 
     return (
         <div style={styles.appContainer}>
-
             <div style={styles.mainContent}>
                 <TweetInput
                     tweet={tweet}
@@ -36,17 +58,15 @@ const Journal = () => {
     );
 };
 
-
-
 const TweetInput = ({ tweet, onTweetChange, onTweetSubmit }) => (
     <div style={styles.tweetInputContainer}>
         <form onSubmit={onTweetSubmit}>
-      <textarea
-          value={tweet}
-          onChange={onTweetChange}
-          placeholder="What's happening?"
-          style={styles.textarea}
-      />
+            <textarea
+                value={tweet}
+                onChange={onTweetChange}
+                placeholder="What's happening?"
+                style={styles.textarea}
+            />
             <button type="submit" style={styles.button}>Tweet</button>
         </form>
     </div>
@@ -54,13 +74,13 @@ const TweetInput = ({ tweet, onTweetChange, onTweetSubmit }) => (
 
 const TweetList = ({ tweets }) => (
     <div style={styles.tweetListContainer}>
-        {tweets.map((tweet) => (
-            <Tweet key={tweet.id} content={tweet.content} />
+        {tweets.map((tweet, index) => (
+            <Tweet key={index} content={tweet.message} username={tweet.username} />
         ))}
     </div>
 );
 
-const Tweet = ({ content }) => {
+const Tweet = ({ content, username }) => {
     const [showReply, setShowReply] = useState(false);
 
     const toggleReply = () => {
@@ -69,7 +89,7 @@ const Tweet = ({ content }) => {
 
     return (
         <div style={styles.tweetContainer}>
-            <p>{content}</p>
+            <p><strong>{username}</strong>: {content}</p>
             <button onClick={toggleReply} style={styles.replyButton}>
                 Reply
             </button>

@@ -49,7 +49,7 @@ const ChallengeBoard = () => {
 
     const completeChallenge = async (id) => {
         try {
-            let i = localStorage.getItem("completed-challenges")
+            let i = String(localStorage.getItem("completed-challenges"))
             console.log(i)
             if (!i){localStorage.setItem("completed-challenges", 1)}
             else { localStorage.setItem("completed-challenges", i+1)}

@@ -4,6 +4,7 @@ import { Sphere } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Rotating Sphere Component
+// Rotating Sphere Component
 const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor }) => {
     const sphereRef = useRef();
     const [scale, setScale] = useState(1);
@@ -30,21 +31,85 @@ const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor 
     useEffect(() => {
         // Update sphere properties based on the current prompt
         switch (prompt) {
-            case 'inhale':
-                setScale(1.5);
+            case 'Inhale deeply':
+                setScale(1);
                 setColor('#87CEFA'); // Light Blue
                 break;
-            case 'exhale':
+            case 'Hold your breath for a moment':
                 setScale(1);
                 setColor('#00BFFF'); // Deep Sky Blue
                 break;
-            case 'let go of stress':
-                setScale(1.2);
+            case 'Exhale slowly':
+                setScale(1);
                 setColor('#FFD700'); // Gold
                 break;
-            case 'calm':
-                setScale(1.3);
+            case 'Feel the calmness wash over you':
+                setScale(1.2);
                 setColor('#90EE90'); // Light Green
+                break;
+            case 'Stare deep into the expanding and contracting circles':
+                setScale(1.3);
+                setColor('#FF69B4'); // Hot Pink
+                break;
+            case 'Let your mind drift with the movement of the particles':
+                setScale(1.4);
+                setColor('#FFA07A'); // Light Salmon
+                break;
+            case 'As you breathe in, feel the particles come closer':
+                setScale(1.5);
+                setColor('#20B2AA'); // Light Sea Green
+                break;
+            case 'As you breathe out, let the particles float further apart':
+                setScale(1.6);
+                setColor('#9370DB'); // Medium Purple
+                break;
+            case 'Embrace the serenity of the moment':
+                setScale(1.7);
+                setColor('#4682B4'); // Steel Blue
+                break;
+            case 'Focus on the gentle rise and fall of your breath':
+                setScale(1.8);
+                setColor('#B0E0E6'); // Powder Blue
+                break;
+            case 'Imagine the particles dancing in harmony with your breathing':
+                setScale(1.9);
+                setColor('#FFC0CB'); // Pink
+                break;
+            case 'With each inhale, draw in positive energy':
+                setScale(2.0);
+                setColor('#7FFFD4'); // Aquamarine
+                break;
+            case 'With each exhale, release all tension and negativity':
+                setScale(2.1);
+                setColor('#FF4500'); // Orange Red
+                break;
+            case 'Visualize yourself surrounded by a tranquil, blue light':
+                setScale(2.2);
+                setColor('#1E90FF'); // Dodger Blue
+                break;
+            case 'Feel the light expanding and contracting with each breath':
+                setScale(2.3);
+                setColor('#32CD32'); // Lime Green
+                break;
+            case 'Allow your mind to wander to a peaceful place':
+                setScale(2.4);
+                setColor('#FFDAB9'); // Peach Puff
+                break;
+            case 'Notice how the particles respond to your calmness':
+                setScale(2.5);
+                setColor('#8A2BE2'); // Blue Violet
+                break;
+            case 'Let go of all thoughts and just be in the moment':
+                setScale(2.6);
+                setColor('#00CED1'); // Dark Turquoise
+                break;
+            case 'Feel a sense of unity with the particles around you':
+                setScale(2.7);
+                setColor('#FF6347'); // Tomato
+                break;
+            case 'Embrace the peacefulness of this experience':
+                setScale(2.8);
+                setColor('#2E8B57'); // Sea Green
                 break;
             default:
                 setScale(1);
@@ -100,20 +165,33 @@ const FloatingParticles = ({ sphereScale, sphereColor }) => {
 };
 
 // Text Overlay Component
+// Text Overlay Component
 const TextOverlay = ({ prompt }) => {
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        setVisible(true);
+        const timeout = setTimeout(() => {
+            setVisible(false);
+        }, 3000); // Fade out after 3 seconds
+        return () => clearTimeout(timeout);
+    }, [prompt]);
+
     const fontSize = '2em';
-    const color = '#FFFFFF'; // White
+    const color = '#000000'; // Black
 
     return (
         <div style={{
             position: 'absolute',
-            top: '50%',
+            top: '10%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             fontSize,
             color,
             textAlign: 'center',
             fontFamily: 'Arial, sans-serif',
+            transition: 'opacity 1s ease-in-out',
+            opacity: visible ? 1 : 0,
         }}>
             {prompt}
         </div>
@@ -129,7 +207,28 @@ const MeditationScene = () => {
 
     useEffect(() => {
         // Cycle through prompts every 4 seconds
-        const prompts = ['inhale', 'exhale', 'let go of stress', 'calm'];
+        const prompts = [
+            'Inhale deeply',
+            'Hold your breath for a moment',
+            'Exhale slowly',
+            'Feel the calmness wash over you',
+            'Stare deep into the expanding and contracting circles',
+            'Let your mind drift with the movement of the particles',
+            'As you breathe in, feel the particles come closer',
+            'As you breathe out, let the particles float further apart',
+            'Embrace the serenity of the moment',
+            'Focus on the gentle rise and fall of your breath',
+            'Imagine the particles dancing in harmony with your breathing',
+            'With each inhale, draw in positive energy',
+            'With each exhale, release all tension and negativity',
+            'Visualize yourself surrounded by a tranquil, blue light',
+            'Feel the light expanding and contracting with each breath',
+            'Allow your mind to wander to a peaceful place',
+            'Notice how the particles respond to your calmness',
+            'Let go of all thoughts and just be in the moment',
+            'Feel a sense of unity with the particles around you',
+            'Embrace the peacefulness of this experience'
+        ];
         let index = 0;
         const interval = setInterval(() => {
             setPrompt(prompts[index]);
@@ -151,7 +250,7 @@ const MeditationScene = () => {
     }, []);
 
     return (
-        <div style={{ position: 'relative', height: '100vh', width: '100vw', background: '#B0E0E6' }}>
+        <div style={{ position: 'relative', height: '100vh', width: '100vw', background: '#ffffff' }}>
             <Canvas
                 style={{ height: '100%', width: '100%' }}
                 camera={{ position: [0, 0, 5] }}

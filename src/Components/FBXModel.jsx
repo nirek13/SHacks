@@ -1,36 +1,28 @@
-import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import React, { useRef, useEffect } from 'react';
+import { useLoader } from '@react-three/fiber';
+import { FBXLoader } from 'three-stdlib';
+import * as THREE from 'three';
 
-const BreathingSphere = ({ phase, inhaleDuration, exhaleDuration }) => {
-    const mesh = useRef();
-    const maxScale = 1.5;
-    const minScale = 1;
+const FBXModel = ({ modelPath, texturePath }) => {
+    const fbx = useLoader(FBXLoader, modelPath);
+    const texture = useLoader(THREE.TextureLoader, texturePath);
+    const modelRef = useRef();
 
-    useFrame(({ clock }) => {
-        const elapsedTime = clock.getElapsedTime();
-        let scale;
+    useEffect(() => {
+        if (modelRef.current) {
+            modelRef.current.traverse((child) => {
+                if (child.isMesh) {
+                    child.material.map = texture;
+                }
+            });
 
-        switch (phase) {
-            case 'inhale':
-                scale = minScale + (maxScale - minScale) * (Math.sin((elapsedTime / inhaleDuration) * Math.PI - Math.PI / 2) + 1) / 2;
-                break;
-            case 'exhale':
-                scale = maxScale - (maxScale - minScale) * (Math.sin((elapsedTime / exhaleDuration) * Math.PI - Math.PI / 2) + 1) / 2;
-                break;
-            default:
-                scale = minScale;
-                break;
+            // Adjust the position and scale of the model if necessary
+            modelRef.current.position.set(0, 0, 0);
+            modelRef.current.scale.set(0.01, 0.01, 0.01); // Adjust scale to fit your scene
         }
+    }, [fbx, texture]);
 
-        mesh.current.scale.set(scale, scale, scale);
-    });
-
-    return (
-        <mesh ref={mesh}>
-            <sphereGeometry args={[1, 32, 32]} />
-            <meshStandardMaterial color="#76c7c0" />
-        </mesh>
-    );
+    return <primitive object={fbx} ref={modelRef} />;
 };
 
-export default BreathingSphere;
+export default FBXModel;

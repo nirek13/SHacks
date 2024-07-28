@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { FaHome, FaUser, FaCogs, FaEnvelope } from 'react-icons/fa';
-
+import Oasis from './Oasis.png';
+import {SiMediamarkt} from "react-icons/si";
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -12,15 +13,16 @@ function Navbar() {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo">
-                    MyLogo
+                    <img src={Oasis} alt="Meditation App Logo" className="navbar-icon2" />
+
                 </Link>
                 <button className="navbar-toggler" onClick={toggleMenu}>
                     ☰
                 </button>
                 <ul className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
                     <li className="navbar-item">
-                        <Link to="/" className="navbar-link">
-                            <FaHome className="navbar-icon" />
+                        <Link to="/Meditate" className="navbar-link">
+                            <SiMediamarkt className="navbar-icon" />
                             Meditate
                         </Link>
                     </li>

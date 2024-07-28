@@ -7,7 +7,7 @@ import ChallengeBoard from "./Components/Challenges";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import Home from "./Components/Home";
-
+import GlobalJournal from "./Components/GlobalJournal";
 function App() {
     return (
         <Router>
@@ -20,7 +20,8 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/meditate" element={<Meditate />} />
-                </Routes>
+                    <Route path={'/journal'} element={<GlobalJournal/>} />
+ </Routes>
             </div>
         </Router>
     );

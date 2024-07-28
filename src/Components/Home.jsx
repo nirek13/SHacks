@@ -13,10 +13,10 @@ const Home = () => {
 
     return (
         <>
-        { !username &&
+        { !user &&
             <div>not signed in</div>
         }
-        { username &&
+        { user &&
             <div className="dashboard">
                 <header className="header">
                     <h1>Welcome to Your Mental Health Dashboard</h1>

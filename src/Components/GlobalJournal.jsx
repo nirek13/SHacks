@@ -71,15 +71,15 @@ const TweetInput = ({ tweet, onTweetChange, onTweetSubmit }) => (
     </div>
 );
 
-const TweetList = ({ tweets }) => (
+const TweetList = ({ tweets, setTweets }) => (
     <div style={styles.tweetListContainer}>
         {tweets.map((tweet, index) => (
-            <Tweet key={index} tweet={tweet} />
+            <Tweet key={index} tweet={tweet} setTweets={setTweets} tweets={tweets} />
         ))}
     </div>
 );
 
-const Tweet = ({ tweet }) => {
+const Tweet = ({ tweet, setTweets, tweets }) => {
     const [showReply, setShowReply] = useState(false);
     const [reply, setReply] = useState('');
 
@@ -96,7 +96,7 @@ const Tweet = ({ tweet }) => {
         if (reply.trim()) {
             try {
                 const username = localStorage.getItem("username");
-                console.log(tweet)
+
                 const response = await axios.post('http://localhost:1000/api/createReply', {
                     username: username,
                     message: reply,
@@ -105,6 +105,16 @@ const Tweet = ({ tweet }) => {
                 });
 
                 console.log('Reply posted successfully:', response.data);
+                const updatedTweets = tweets.map(t => {
+                    if (t.post === tweet.post) {
+                        return {
+                            ...t,
+                            replies: [...(t.replies || []), response.data]
+                        };
+                    }
+                    return t;
+                });
+                setTweets(updatedTweets);
                 setReply('');
             } catch (error) {
                 console.error('Error posting reply:', error.response ? error.response.data : error.message);

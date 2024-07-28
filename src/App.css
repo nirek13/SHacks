@@ -2,7 +2,9 @@
   text-align: center;
   display: flex;
   width: 100vw;
+  overflow-x: hidden;
   justify-content: space-between;
+  padding: 48px 64px;
 }
 
 .App-logo {

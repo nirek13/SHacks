@@ -275,6 +275,7 @@ const MeditationScene = () => {
                 />
             </Canvas>
             <TextOverlay prompt={prompt} />
+         
         </div>
     );
 };

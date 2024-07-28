@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Home.css';
-
+import DashboardJournal from './DashboardJournal';
 const Home = () => {
     const [user, setUser] = useState(null);
 
@@ -38,11 +38,7 @@ const Home = () => {
                     <p>"Every day is a second chance."</p>
                 </section>
                 <section className="mood-tracker">
-                    <h2>Mood Tracker</h2>
-                    <p>How are you feeling today?</p>
-                    <button>😊 Happy</button>
-                    <button>😐 Neutral</button>
-                    <button>😢 Sad</button>
+                    <DashboardJournal />
                 </section>
                 <section className="tips">
                     <h2>Mental Health Tips</h2>

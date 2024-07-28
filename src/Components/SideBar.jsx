@@ -51,9 +51,7 @@ const SideBar = () => {
                     </ul>
                 </div>
             
-            {user == "louis" && 
-                
-            }
+ 
         </>
         
     );

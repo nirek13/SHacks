@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = 1000;
 
+const sqlite3 = require('sqlite3')
+
 const SECRET_KEY = 'your_secret_key';
 const usersFile = './users.json';
 const challengesFile = './challenges.json';
@@ -23,6 +25,24 @@ const readData = (file) => {
     return [];
 };
 
+const db = new sqlite3.Database('../db/collection.db', (err) => {
+    if (err) {
+        console.error('Error opening database:', err.message);
+    } else {
+        console.log('Connected to the SQLite database.');
+        createTable(); // Call the function to create the table after connecting to the database
+    }
+});
+
+const createTable = () => {
+    db.run('CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, index INTEGER  )', (err) => {
+        if (err) {
+            console.error('Error creating table:', err.message);
+        } else {
+            console.log('Users table created successfully.');
+        }
+    });
+}
 // Write data to a file
 const writeData = (file, data) => {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));
@@ -64,7 +84,6 @@ const authenticate = (req, res, next) => {
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
-
     try {
         const payload = jwt.verify(token, SECRET_KEY);
         req.user = payload;

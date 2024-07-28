@@ -280,26 +280,7 @@ const styles = {
         color: '#333',
         marginBottom: '10px',
     },
-    friendsWidgetContainer: {
-        width: '100%',
-        backgroundColor: '#ffffff',
-        borderRadius: '12px',
-        padding: '15px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-        marginTop: '20px',
-        border: '1px solid #e0e0e0',
-    },
-    friendsList: {
-        listStyle: 'none',
-        padding: 0,
-    },
-    friendItem: {
-        padding: '8px 0',
-        borderBottom: '1px solid #ddd',
-        fontSize: '16px',
-        fontFamily: 'Arial, sans-serif',
-        color: '#333',
-    },
+    
     searchBarContainer: {
         width: '100%',
         padding: '10px 20px',

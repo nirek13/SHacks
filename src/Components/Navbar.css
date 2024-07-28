@@ -30,7 +30,7 @@
 
 /* Link styling with transitions */
 .navbar-link {
-    color: #FFFF; /* Default color */
+    color: black; /* Default color */
     text-decoration: none;
     font-size: 1.2rem;
     display: flex;
@@ -40,7 +40,7 @@
 
 /* Hover effect for links */
 .navbar-link:hover {
-    color: #e7e7e7; /* Shiny effect color */
+    color: black;
 }
 
 /* Icon styling with border */
@@ -104,4 +104,7 @@
     .navbar-toggler {
         display: block;
     }
+}
+.navbar-item:nth-of-type(1) {
+    margin-top: 32px;
 }

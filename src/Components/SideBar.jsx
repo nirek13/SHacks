@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Nirek from "./nirek.png"
 import Louis from "./louis.png"
 import { Link } from 'react-router-dom';
+
 import './sidebar.css'
 const SideBar = () => { 
     const [user, setUser] = useState(null);
@@ -31,6 +32,12 @@ const SideBar = () => {
                     
                     <ul >
                         <li className="navbar-item">
+                            <Link to="/" className="navbar-link">
+                            
+                                Home
+                            </Link>
+                        </li>
+                        <li className="navbar-item">
                             <Link to="/Meditate" className="navbar-link">
                                
                                 Meditate
@@ -48,6 +55,15 @@ const SideBar = () => {
                                 Challenges
                             </Link>
                         </li>
+                        { !user && 
+                            <li className="navbar-item">
+                            <Link to="/login" className="navbar-link">
+                               
+                                Login
+                            </Link>
+                        </li>
+                        }
+                        
 
                     </ul>
                 </div>

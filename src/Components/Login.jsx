@@ -13,7 +13,7 @@ const Login = ({ setToken }) => {
         e.preventDefault();
         try {
             localStorage.setItem('username', username); // Store the username
-            navigate('/challenges');
+            navigate('/');
         } catch (error) {
             localStorage.setItem('username', username);
             setMessage(error.response?.data?.error || 'An error occurred');

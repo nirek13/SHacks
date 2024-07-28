@@ -24,7 +24,7 @@
 
 .add-button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #292929;
     color: white;
     border: none;
     border-radius: 5px;
@@ -33,7 +33,7 @@
 }
 
 .add-button:hover {
-    background-color: #0056b3;
+    background-color: #000000;
 }
 
 .challenge-list {
@@ -57,16 +57,17 @@
 
 .join-button {
     padding: 5px 10px;
-    background-color: #28a745;
+    background-color: #191919;
+    margin: 0px 16px;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 100px;
     cursor: pointer;
     font-size: 14px;
 }
 
 .join-button:hover {
-    background-color: #218838;
+    background-color: #000000;
 }
 
 .participants-list {

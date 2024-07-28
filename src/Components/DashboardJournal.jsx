@@ -38,7 +38,7 @@ export default function DashboardJournal() {
                     onEntryChange={handleEntryChange}
                     onEntrySubmit={handleEntrySubmit}
                 />
-                <JournalList entries={entries} />
+                
             </div>
         </div>
     );
@@ -78,7 +78,7 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '100vh',
+        height: '30vh',
         backgroundColor: '#f5f5f5',
         color: '#333',
         fontFamily: 'Arial, sans-serif',
@@ -116,8 +116,8 @@ const styles = {
         marginTop: '10px',
         padding: '10px 20px',
         border: 'none',
-        borderRadius: '8px',
-        backgroundColor: '#4CAF50',
+        borderRadius: '100px',
+        backgroundColor: '#000000',
         color: '#ffffff',
         cursor: 'pointer',
         fontSize: '16px',

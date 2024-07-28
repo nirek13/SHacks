@@ -19,10 +19,13 @@ const SideBar = () => {
                 </>
             }
             {user == "louis" && 
-                <div>
+                <div className={`navbar-menu`}>
+                    <div style={{display: "flex", flexDirection: "column"}}>
                     <img className="circular-image" src={Nirek} />
-
-                    <ul className={`navbar-menu`}>
+                    <div>Louis</div>
+                    </div>
+                    
+                    <ul >
                         <li className="navbar-item">
                             <Link to="/Meditate" className="navbar-link">
                                
@@ -37,7 +40,7 @@ const SideBar = () => {
                         </li>
                         <li className="navbar-item">
                             <Link to="/challenges" className="navbar-link">
-                           
+
                                 Challenges
                             </Link>
                         </li>

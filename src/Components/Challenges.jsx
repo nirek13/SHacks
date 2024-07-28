@@ -7,32 +7,52 @@ const ChallengeBoard = () => {
     const [newChallenge, setNewChallenge] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:1000/api/challenges')
-            .then(response => setChallenges(response.data))
-            .catch(error => console.error('Error fetching challenges:', error));
+        const fetchChallenges = async () => {
+            try {
+                const response = await axios.get('http://localhost:1000/api/challenges');
+                setChallenges(response.data);
+            } catch (error) {
+                console.error('Error fetching challenges:', error);
+            }
+        };
+
+        fetchChallenges();
     }, []);
 
-    const addChallenge = () => {
-        if (newChallenge.trim() !== '') {
-            const challenge = { text: newChallenge, participants: [] };
-            axios.post('http://localhost:1000/api/challenges', challenge)
-                .then(response => setChallenges([...challenges, response.data]))
-                .catch(error => console.error('Error adding challenge:', error));
-            setNewChallenge('');
+    const addChallenge = async () => {
+        if (newChallenge.trim()) {
+            try {
+                const username = localStorage.getItem("username");
+                const response = await axios.post('http://localhost:1000/api/createChallenge', {
+                    username: username, // Replace with actual username
+                    text: newChallenge,
+                });
+                setChallenges([...challenges, response.data]);
+                setNewChallenge('');
+            } catch (error) {
+                console.error('Error adding challenge:', error);
+            }
         }
     };
 
-    const joinChallenge = (index) => {
-        const userName = prompt('Enter your name:');
-        if (userName) {
-            axios.post(`http://localhost:1000/api/challenges/${index}/join`, { userName })
-                .then(response => {
-                    const updatedChallenges = challenges.map((challenge, i) =>
-                        i === index ? response.data : challenge
-                    );
-                    setChallenges(updatedChallenges);
-                })
-                .catch(error => console.error('Error joining challenge:', error));
+    const joinChallenge = async (id) => {
+        try {
+            const username = localStorage.getItem("username");
+            const response = await axios.post(`http://localhost:1000/api/joinChallenge/${id}`, {
+                username: username, // Replace with actual username
+            });
+            setChallenges(challenges.map(challenge => challenge.id === id ? response.data : challenge));
+        } catch (error) {
+            console.error('Error joining challenge:', error);
+        }
+    };
+
+    const completeChallenge = async (id) => {
+        try {
+            const response = await axios.post(`http://localhost:1000/api/completeChallenge/${id}`);
+            setChallenges(challenges.map(challenge => challenge.id === id ? response.data : challenge));
+        } catch (error) {
+            console.error('Error completing challenge:', error);
         }
     };
 
@@ -50,11 +70,13 @@ const ChallengeBoard = () => {
                 <button onClick={addChallenge} className="add-button">Add Challenge</button>
             </div>
             <ul className="challenge-list">
-                {challenges.map((challenge, index) => (
-                    <li key={index} className="challenge-item">
+                {challenges.map((challenge) => (
+                    <li key={challenge.id} className="challenge-item">
                         <div className="challenge-text">
-                            <span>{challenge.text}</span>
-                            <button onClick={() => joinChallenge(index)} className="join-button">Join Challenge</button>
+                            <span>{challenge.text} (created by {challenge.creator})</span>
+                            <button onClick={() => joinChallenge(challenge.id)} className="join-button">Join Challenge</button>
+                            <button onClick={() => completeChallenge(challenge.id)} className="complete-button">Complete Challenge</button>
+                            <span>Completed: {challenge.completedCount}</span>
                         </div>
                         <ul className="participants-list">
                             {challenge.participants.map((participant, i) => (

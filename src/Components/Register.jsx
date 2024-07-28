@@ -12,7 +12,7 @@ const Register = () => {
             const response = await axios.post('http://localhost:1000/api/register', { username, password });
             setMessage(response.data.message);
         } catch (error) {
-            setMessage(error.response.data.error);
+            setMessage(error.response?.data?.error || 'An error occurred');
         }
     };
 

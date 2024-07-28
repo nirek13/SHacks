@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ setToken }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -14,9 +14,9 @@ const Login = ({ setToken }) => {
             const response = await axios.post('http://localhost:1000/api/login', { username, password });
             setToken(response.data.token);
             localStorage.setItem('token', response.data.token);
-            history.push('/challenges');
+            navigate('/challenges');
         } catch (error) {
-            setMessage(error.response.data.error);
+            setMessage(error.response?.data?.error || 'An error occurred');
         }
     };
 

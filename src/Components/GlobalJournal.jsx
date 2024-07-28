@@ -1,7 +1,5 @@
-import React, { useState, useEffect , useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-
 
 const Journal = () => {
     const [tweet, setTweet] = useState('');
@@ -37,7 +35,6 @@ const Journal = () => {
 
                 setTweets([response.data, ...tweets]);
                 setTweet('');
-                window.location.reload()
             } catch (error) {
                 console.error('Error posting tweet:', error);
             }
@@ -71,55 +68,16 @@ const TweetInput = ({ tweet, onTweetChange, onTweetSubmit }) => (
             />
             <button type="submit" style={styles.button}>Tweet</button>
         </form>
-
     </div>
 );
 
-const TweetList = ({ tweets, setTweets }) => {
-    const tweetListRef = useRef(null); // Create a ref for the container
-
-    // Styles for the component
-    const styles = {
-        tweetListContainer: {
-            display: 'flex',
-            flexDirection: 'column',
-            maxHeight: '500px', // Adjust as needed
-            overflowY: 'auto', // Enable vertical scrolling
-            overflowX: 'hidden', // Prevent horizontal overflow
-            padding: '10px',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-        },
-        tweet: {
-            marginBottom: '10px',
-            padding: '10px',
-            border: '1px solid #eee',
-            borderRadius: '5px',
-            backgroundColor: '#fff',
-        },
-    };
-
-    useEffect(() => {
-        // Scroll to the bottom when tweets change
-        if (tweetListRef.current) {
-            tweetListRef.current.scrollTop = tweetListRef.current.scrollHeight;
-        }
-    }, [tweets]); // Dependency array includes tweets so it runs when tweets change
-
-    return (
-        <div style={styles.tweetListContainer} ref={tweetListRef}>
-            {tweets.map((tweet, index) => (
-                <Tweet
-                    key={index}
-                    tweet={tweet}
-                    setTweets={setTweets}
-                    tweets={tweets}
-                    style={styles.tweet}
-                />
-            ))}
-        </div>
-    );
-};
+const TweetList = ({ tweets, setTweets }) => (
+    <div style={styles.tweetListContainer}>
+        {tweets.map((tweet, index) => (
+            <Tweet key={index} tweet={tweet} setTweets={setTweets} tweets={tweets} />
+        ))}
+    </div>
+);
 
 const Tweet = ({ tweet, setTweets, tweets }) => {
     const [showReply, setShowReply] = useState(false);
@@ -154,9 +112,7 @@ const Tweet = ({ tweet, setTweets, tweets }) => {
                             replies: [...(t.replies || []), response.data]
                         };
                     }
-                    window.location.reload()
                     return t;
-
                 });
                 setTweets(updatedTweets);
                 setReply('');
@@ -167,34 +123,23 @@ const Tweet = ({ tweet, setTweets, tweets }) => {
     };
 
     return (
-        <div className="tweet-container">
-            <p className="tweet-content">
-                <strong>{tweet.username}</strong>: {tweet.message}
-            </p>
-            <button onClick={toggleReply} className="reply-button">
+        <div style={styles.tweetContainer}>
+            <p><strong>{tweet.username}</strong>: {tweet.message}</p>
+            <button onClick={toggleReply} style={styles.replyButton}>
                 Reply
             </button>
             {showReply && (
-                <div className="reply-container">
-                    <form onSubmit={handleReplySubmit}>
-                        <textarea
-                            className="reply-input"
-                            value={reply}
-                            onChange={handleReplyChange}
-                            placeholder="Write a reply..."
-                        />
-                        <button type="submit" className="reply-submit">
-                            Submit
-                        </button>
-                    </form>
-                </div>
+                <Reply
+                    reply={reply}
+                    onReplyChange={handleReplyChange}
+                    onReplySubmit={handleReplySubmit}
+                />
             )}
-            <div className="reply-list">
-                <ReplyList replies={tweet.replies} />
-            </div>
+            <ReplyList replies={tweet.replies} />
         </div>
     );
 };
+
 const Reply = ({ reply, onReplyChange, onReplySubmit }) => (
     <div style={styles.replyContainer}>
         <form onSubmit={onReplySubmit}>
@@ -242,7 +187,6 @@ const styles = {
         color: '#333',
         fontFamily: 'Arial, sans-serif',
         padding: '20px',
-        width:'100vh'
     },
     mainContent: {
         flex: 1,
@@ -336,7 +280,7 @@ const styles = {
         color: '#333',
         marginBottom: '10px',
     },
-
+    
     searchBarContainer: {
         width: '100%',
         padding: '10px 20px',

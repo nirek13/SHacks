@@ -165,6 +165,83 @@ app.post('/api/challenges/:index/join', authenticate, (req, res) => {
     }
 });
 
+const getNextChatTableNumber = () => {
+    return new Promise((resolve, reject) => {
+        db.all("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'chat_%'", (err, tables) => {
+            if (err) {
+                return reject(err);
+            }
+            const chatNumbers = tables.map(table => {
+                const match = table.name.match(/chat_(\d+)/);
+                return match ? parseInt(match[1], 10) : 0;
+            });
+            const maxNumber = chatNumbers.length > 0 ? Math.max(...chatNumbers) : 0;
+            resolve(maxNumber + 1);
+        });
+    });
+};
+
+app.post("/api/createPost", async (req, res) => {
+    try {
+        const { username, message } = req.body;
+
+        if (!username || !message) {
+            return res.status(400).json({ error: 'Username and message are required' });
+        }
+
+        const nextChatNumber = await getNextChatTableNumber();
+        const chatTableName = `chat_${nextChatNumber}`;
+
+        db.run(`CREATE TABLE "${chatTableName}" (username TEXT, message TEXT, post BOOLEAN)`, (err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error creating chat table', message: err.message });
+            }
+
+            db.run(`INSERT INTO "${chatTableName}" (username, message, post) VALUES (?, ?, ?)`, [username, message, true], (err) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error inserting into chat table', message: err.message });
+                }
+
+                res.status(201).json({ message: 'Post created successfully', table: chatTableName });
+            });
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error', message: err.message });
+    }
+});
+
+app.get('/api/feed', async (req, res) => {
+    try {
+        db.all("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'chat_%'", (err, tables) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error retrieving tables', message: err.message });
+            }
+
+            const fetchPostsPromises = tables.map(table => {
+                return new Promise((resolve, reject) => {
+                    db.all(`SELECT '${table.name}' AS table_name, username, message, post FROM "${table.name}"`, (err, rows) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(rows);
+                    });
+                });
+            });
+
+            Promise.all(fetchPostsPromises)
+                .then(results => {
+                    const combinedResults = [].concat(...results);
+                    res.json(combinedResults);
+                })
+                .catch(err => {
+                    res.status(500).json({ error: 'Error retrieving posts', message: err.message });
+                });
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error', message: err.message });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

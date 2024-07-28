@@ -1,20 +1,57 @@
-.home-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('./Oasis.svg');
-    background-size: cover;
-    background-position: center;
+.dashboard {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#fullname {
-    color: white;
-    font-size: 3rem;
-    transition: transform 0.1s ease-out, filter 0.1s ease-out;
-    text-align: left;
+.header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-:root {
-    --name-shadow: rgba(0, 0, 0, 0.5); /* Adjust the shadow color as needed */
+.user-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.affirmations, .mood-tracker, .tips {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.affirmations h2, .mood-tracker h2, .tips h2 {
+    color: #333333;
+}
+
+.affirmations p, .tips ul {
+    color: #555555;
+}
+
+.tips ul {
+    list-style-type: disc;
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+}
+
+.mood-tracker button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.mood-tracker button:hover {
+    background-color: #0056b3;
 }

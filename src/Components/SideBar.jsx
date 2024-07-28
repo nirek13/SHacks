@@ -36,9 +36,9 @@ const SideBar = () => {
                             </Link>
                         </li>
                         <li className="navbar-item">
-                            <Link to="/about" className="navbar-link">
+                            <Link to="/journal" className="navbar-link">
                               
-                                Milestones
+                                Journal
                             </Link>
                         </li>
                         <li className="navbar-item">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Nirek from "./nirek.png"
+import Louis from "./louis.png"
 import { Link } from 'react-router-dom';
 import './sidebar.css'
 const SideBar = () => { 
@@ -21,7 +22,7 @@ const SideBar = () => {
                     }
                     {user == "louis" && 
                         <>
-                            <img className="circular-image" src={Nirek} />
+                            <img className="circular-image" src={Louis} />
                             <div>Louis</div>
                         </>
                     }

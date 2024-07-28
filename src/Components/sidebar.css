@@ -9,7 +9,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 32px;
     flex-direction: column;
     background-color: #ffff;
     height: 100vh;

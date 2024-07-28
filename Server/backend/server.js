@@ -183,7 +183,7 @@ app.post("/api/createPost", async (req, res) => {
                     console.log("Error inserting into chat table:", err.message);
                     return res.status(700).json({ error: 'Error inserting into chat table', message: err.message });
                 }
-                res.status(201).json({ message: 'Post created successfully', table: chatTableName });
+                res.status(201).json({ message: message, table: chatTableName });
             });
         });
     } catch (err) {

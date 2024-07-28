@@ -13,66 +13,84 @@ const usersFile = './users.json';
 const challengesFile = './challenges.json';
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow all origins for simplicity. Change this to your specific origin in production.
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token']
+}));
+
+
 
 const db = new sqlite3.Database('../db/collection.db', (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
         console.log('Connected to the SQLite database.');
-        dropTable(); // Call the function to create the table after connecting to the database
+        initializeDatabase(); // Initialize the database tables
     }
 });
 
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS challenges (
-        id INTEGER PRIMARY KEY,
-        text TEXT,
-        creator TEXT,
-        completedCount INTEGER DEFAULT 0
-    )`);
+const initializeDatabase = () => {
+    db.serialize(() => {
+        db.run(`CREATE TABLE IF NOT EXISTS challenges (
+            id INTEGER PRIMARY KEY,
+            text TEXT,
+            creator TEXT,
+            completedCount INTEGER DEFAULT 0
+        )`);
+        
+        db.run(`CREATE TABLE IF NOT EXISTS participants (
+            challengeId INTEGER,
+            username TEXT,
+            FOREIGN KEY(challengeId) REFERENCES challenges(id)
+        )`);
+        
+        db.run('CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, user_index INTEGER)', (err) => {
+            if (err) {
+                console.error('Error creating users table:', err.message);
+            } else {
+                console.log('Users table created successfully.');
+            }
+        });
+        
+        db.run(`CREATE TABLE IF NOT EXISTS replies (
+            id INTEGER PRIMARY KEY,
+            chatTableName TEXT,
+            username TEXT,
+            message TEXT,
+            postId INTEGER,
+            FOREIGN KEY(postId) REFERENCES chatTables(id)
+        )`);
+        
+    });
+};
 
-    db.run(`CREATE TABLE IF NOT EXISTS participants (
-        challengeId INTEGER,
-        username TEXT,
-        FOREIGN KEY(challengeId) REFERENCES challenges(id)
-    )`);
-});
+const getNextChatTableNumber = () => {
+    return new Promise((resolve, reject) => {
+        db.all("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'chat_%'", (err, tables) => {
+            if (err) {
+                return reject(err);
+            }
+            const chatNumbers = tables.map(table => {
+                const match = table.name.match(/chat_(\d+)/);
+                return match ? parseInt(match[1], 10) : 0;
+            });
+            const maxNumber = chatNumbers.length > 0 ? Math.max(...chatNumbers) : 0;
+            resolve(maxNumber + 1);
+        });
+    });
+};
 
 const readData = (file) => {
-    console.log("shit")
     if (fs.existsSync(file)) {
         const data = fs.readFileSync(file);
         return JSON.parse(data);
     }
-    console.log("shit2")
-
     return [];
 };
 
 const writeData = (file, data) => {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));
-};
-
-const dropTable = () => {
-    db.run('DROP TABLE IF EXISTS users', (err) => {
-        if (err) {
-            console.error('Error dropping table:', err.message);
-        } else {
-            console.log('Users table dropped successfully.');
-            createTable(); // Create the table after dropping it
-        }
-    });
-};
-
-const createTable = () => {
-    db.run('CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, user_index INTEGER)', (err) => {
-        if (err) {
-            console.error('Error creating table:', err.message);
-        } else {
-            console.log('Users table created successfully.');
-        }
-    });
 };
 
 const getLastIndexOfUsers = () => {
@@ -90,30 +108,21 @@ const getLastIndexOfUsers = () => {
 app.post('/api/register', async (req, res) => {
     try {
         const { username, password } = req.body;
-        console.log("f")
+
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password are required' });
         }
-        console.log("fuck")
-        try {
-            const users = readData(usersFile);
-            if (users.find(user => user.username === username)) {
-                return res.status(400).json({ error: 'Username already exists' });
-            }
-    
-            const hashedPassword = await bcrypt.hash(password, 10);
-            users.push({ username, password: hashedPassword });
-            writeData(usersFile, users);
-        } catch {
-            console.log("d")
+
+        const users = readData(usersFile);
+        if (users.find(user => user.username === username)) {
+            return res.status(400).json({ error: 'Username already exists' });
         }
-        let lastIndex;
-        try {
-            lastIndex = await getLastIndexOfUsers();
-        } catch (err) {
-            return res.status(500).json({ error: 'Database error', message: err.message });
-        }
-        console.log("k")
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        users.push({ username, password: hashedPassword });
+        writeData(usersFile, users);
+
+        const lastIndex = await getLastIndexOfUsers();
         const userIndex = lastIndex + 1;
 
         db.run('INSERT INTO users (username, user_index) VALUES (?, ?)', [username, userIndex], (err) => {
@@ -153,94 +162,58 @@ const authenticate = (req, res, next) => {
         res.status(401).json({ error: 'Unauthorized' });
     }
 };
-
-// app.get('/api/challenges', authenticate, (req, res) => {
-//     const challenges = readData(challengesFile);
-//     res.json(challenges);
-// });
-
-// app.post('/api/challenges', authenticate, (req, res) => {
-//     const newChallenge = req.body;
-//     const challenges = readData(challengesFile);
-//     challenges.push(newChallenge);
-//     writeData(challengesFile, challenges);
-//     res.status(201).json(newChallenge);
-// });
-
-// app.post('/api/challenges/:index/join', authenticate, (req, res) => {
-//     const { index } = req.params;
-//     const { userName } = req.body;
-//     const challenges = readData(challengesFile);
-//     if (challenges[index]) {
-//         challenges[index].participants.push(userName);
-//         writeData(challengesFile, challenges);
-//         res.json(challenges[index]);
-//     } else {
-//         res.status(404).json({ error: 'Challenge not found' });
-//     }
-// });
-
-const getNextChatTableNumber = () => {
-    return new Promise((resolve, reject) => {
-        db.all("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'chat_%'", (err, tables) => {
-            if (err) {
-                return reject(err);
-            }
-            const chatNumbers = tables.map(table => {
-                const match = table.name.match(/chat_(\d+)/);
-                return match ? parseInt(match[1], 10) : 0;
-            });
-            const maxNumber = chatNumbers.length > 0 ? Math.max(...chatNumbers) : 0;
-            resolve(maxNumber + 1);
-        });
-    });
-};
-
-app.post('/api/createReply', (req, res) => {
-    const { username, message, chatTableName, postId } = req.body;
-
-    if (!username || !message || !chatTableName || !postId) {
-        console.log(username, message, chatTableName, postId)
-        return res.status(400).json({ error: 'All fields are required' });
-    }
-
-    db.run(`INSERT INTO "${chatTableName}" (username, message, post) VALUES (?, ?, ?)`, [username, message, false], function (err) {
-        if (err) {
-            return res.status(500).json({ error: 'Error inserting into chat table', message: err.message });
-        }
-        res.status(201).json({ message: 'Reply posted successfully' });
-    });
-});
-
-
 app.post("/api/createPost", async (req, res) => {
     try {
         const { username, message } = req.body;
-
+        console.log("Received create post request", username, message);
         if (!username || !message) {
+            console.log("Missing username or message");
             return res.status(400).json({ error: 'Username and message are required' });
         }
-
         const nextChatNumber = await getNextChatTableNumber();
+        console.log("Next chat number:", nextChatNumber);
         const chatTableName = `chat_${nextChatNumber}`;
-
         db.run(`CREATE TABLE "${chatTableName}" (username TEXT, message TEXT, post BOOLEAN)`, (err) => {
             if (err) {
-                return res.status(500).json({ error: 'Error creating chat table', message: err.message });
+                console.log("Error creating chat table:", err.message);
+                return res.status(600).json({ error: 'Error creating chat table', message: err.message });
             }
-
             db.run(`INSERT INTO "${chatTableName}" (username, message, post) VALUES (?, ?, ?)`, [username, message, true], (err) => {
                 if (err) {
-                    return res.status(500).json({ error: 'Error inserting into chat table', message: err.message });
+                    console.log("Error inserting into chat table:", err.message);
+                    return res.status(700).json({ error: 'Error inserting into chat table', message: err.message });
                 }
-
                 res.status(201).json({ message: 'Post created successfully', table: chatTableName });
             });
         });
     } catch (err) {
-        res.status(500).json({ error: 'Server error', message: err.message });
+        console.log("Server error:", err.message);
+        res.status(800).json({ error: 'Server error', message: err.message });
     }
 });
+
+
+
+const deleteAllTables = () => {
+    db.serialize(() => {
+        db.all("SELECT name FROM sqlite_master WHERE type='table'", (err, tables) => {
+            if (err) {
+                console.error('Error retrieving tables:', err.message);
+                return;
+            }
+
+            tables.forEach((table) => {
+                db.run(`DROP TABLE IF EXISTS ${table.name}`, (err) => {
+                    if (err) {
+                        console.error(`Error dropping table ${table.name}:`, err.message);
+                    } else {
+                        console.log(`Table ${table.name} dropped successfully.`);
+                    }
+                });
+            });
+        });
+    });
+};
 
 app.get('/api/feed', async (req, res) => {
     try {
@@ -251,11 +224,27 @@ app.get('/api/feed', async (req, res) => {
 
             const fetchPostsPromises = tables.map(table => {
                 return new Promise((resolve, reject) => {
-                    db.all(`SELECT '${table.name}' AS table_name, username, message, post FROM "${table.name}"`, (err, rows) => {
+                    db.all(`SELECT '${table.name}' AS table_name, rowid AS id, username, message, post FROM "${table.name}"`, (err, rows) => {
                         if (err) {
                             return reject(err);
                         }
-                        resolve(rows);
+
+                        // Fetch replies for each post
+                        const fetchRepliesPromises = rows.map(row => {
+                            return new Promise((resolve, reject) => {
+                                db.all(`SELECT * FROM replies WHERE chatTableName = ? AND postId = ?`, [table.name, row.id], (err, replies) => {
+                                    if (err) {
+                                        return reject(err);
+                                    }
+                                    row.replies = replies;
+                                    resolve();
+                                });
+                            });
+                        });
+
+                        Promise.all(fetchRepliesPromises)
+                            .then(() => resolve(rows))
+                            .catch(reject);
                     });
                 });
             });
@@ -274,6 +263,23 @@ app.get('/api/feed', async (req, res) => {
     }
 });
 
+
+app.post('/api/createReply', (req, res) => {
+    const { username, message, chatTableName, postId } = req.body;
+
+    if (!username || !message || !chatTableName || !postId) {
+        console.log(username, message, chatTableName, postId);
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    db.run(`INSERT INTO replies (chatTableName, username, message, postId) VALUES (?, ?, ?, ?)`, [chatTableName, username, message, postId], function (err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error inserting into replies table', message: err.message });
+        }
+        res.status(201).json({ message: 'Reply posted successfully' });
+    });
+});
+
 app.post('/api/createChallenge', (req, res) => {
     const { username, text } = req.body;
 
@@ -281,7 +287,7 @@ app.post('/api/createChallenge', (req, res) => {
         return res.status(400).json({ error: 'Username and text are required' });
     }
 
-    db.run(`INSERT INTO challenges (text, creator) VALUES (?, ?)`, [text, username], function(err) {
+    db.run(`INSERT INTO challenges (text, creator) VALUES (?, ?)`, [text, username], function (err) {
         if (err) {
             return res.status(500).json({ error: 'Error creating challenge', message: err.message });
         }
@@ -298,7 +304,7 @@ app.post('/api/joinChallenge/:id', (req, res) => {
         return res.status(400).json({ error: 'Username is required' });
     }
 
-    db.run(`INSERT INTO participants (challengeId, username) VALUES (?, ?)`, [id, username], function(err) {
+    db.run(`INSERT INTO participants (challengeId, username) VALUES (?, ?)`, [id, username], function (err) {
         if (err) {
             return res.status(500).json({ error: 'Error joining challenge', message: err.message });
         }
@@ -323,7 +329,7 @@ app.post('/api/joinChallenge/:id', (req, res) => {
 app.post('/api/completeChallenge/:id', (req, res) => {
     const { id } = req.params;
 
-    db.run(`UPDATE challenges SET completedCount = completedCount + 1 WHERE id = ?`, [id], function(err) {
+    db.run(`UPDATE challenges SET completedCount = completedCount + 1 WHERE id = ?`, [id], function (err) {
         if (err) {
             return res.status(500).json({ error: 'Error marking challenge as completed', message: err.message });
         }

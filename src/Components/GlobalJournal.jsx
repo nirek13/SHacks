@@ -51,7 +51,7 @@ const Journal = () => {
                 />
                 <TweetList tweets={tweets} setTweets={setTweets} />
             </div>
-            <FriendsWidget />
+   
             <SearchBar />
         </div>
     );
@@ -165,25 +165,7 @@ const ReplyList = ({ replies }) => (
     </div>
 );
 
-const FriendsWidget = () => {
-    const friends = [
-        { id: 1, name: 'Alice' },
-        { id: 2, name: 'Bob' },
-    ];
 
-    return (
-        <div style={styles.friendsWidgetContainer}>
-            <h2>Friends</h2>
-            <ul style={styles.friendsList}>
-                {friends.map((friend) => (
-                    <li key={friend.id} style={styles.friendItem}>
-                        {friend.name}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
 
 const SearchBar = () => (
     <div style={styles.searchBarContainer}>
@@ -201,9 +183,10 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-between',
         height: '100vh',
-        backgroundColor: '#f0f8ff',
+        backgroundColor: '#f5f5f5',
         color: '#333',
         fontFamily: 'Arial, sans-serif',
+        padding: '20px',
     },
     mainContent: {
         flex: 1,
@@ -215,29 +198,34 @@ const styles = {
     tweetInputContainer: {
         width: '100%',
         backgroundColor: '#ffffff',
-        borderRadius: '10px',
-        padding: '10px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        borderRadius: '12px',
+        padding: '15px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
         marginBottom: '20px',
+        border: '1px solid #e0e0e0',
     },
     textarea: {
         width: '100%',
-        border: 'none',
+        border: '1px solid #e0e0e0',
         outline: 'none',
-        padding: '10px',
-        borderRadius: '10px',
+        padding: '12px',
+        borderRadius: '8px',
         boxSizing: 'border-box',
         fontSize: '16px',
         resize: 'none',
+        fontFamily: 'Arial, sans-serif',
+        color: '#333',
     },
     button: {
         marginTop: '10px',
         padding: '10px 20px',
         border: 'none',
-        borderRadius: '10px',
-        backgroundColor: '#1da1f2',
+        borderRadius: '8px',
+        backgroundColor: '#4CAF50',
         color: '#ffffff',
         cursor: 'pointer',
+        fontSize: '16px',
+        fontFamily: 'Arial, sans-serif',
     },
     tweetListContainer: {
         width: '100%',
@@ -245,24 +233,28 @@ const styles = {
     tweetContainer: {
         width: '100%',
         backgroundColor: '#ffffff',
-        borderRadius: '10px',
-        padding: '10px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        marginBottom: '10px',
+        borderRadius: '12px',
+        padding: '15px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        marginBottom: '15px',
+        border: '1px solid #e0e0e0',
     },
     replyButton: {
         backgroundColor: 'transparent',
         border: 'none',
-        color: '#1da1f2',
+        color: '#4CAF50',
         cursor: 'pointer',
         padding: '5px',
         textDecoration: 'underline',
         fontSize: '14px',
+        marginTop: '5px',
+        fontFamily: 'Arial, sans-serif',
     },
     replyContainer: {
         marginTop: '10px',
         display: 'flex',
         alignItems: 'center',
+        flexDirection: 'column',
     },
     replyListContainer: {
         marginTop: '10px',
@@ -271,40 +263,51 @@ const styles = {
         marginTop: '10px',
         backgroundColor: '#f9f9f9',
         padding: '10px',
-        borderRadius: '10px',
+        borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+        width: '100%',
+        border: '1px solid #e0e0e0',
     },
     input: {
         flex: 1,
-        border: 'none',
+        border: '1px solid #e0e0e0',
         outline: 'none',
         padding: '10px',
-        borderRadius: '10px',
+        borderRadius: '8px',
         boxSizing: 'border-box',
         fontSize: '16px',
+        fontFamily: 'Arial, sans-serif',
+        color: '#333',
+        marginBottom: '10px',
     },
     friendsWidgetContainer: {
         width: '100%',
         backgroundColor: '#ffffff',
-        borderRadius: '10px',
-        padding: '10px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        borderRadius: '12px',
+        padding: '15px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
         marginTop: '20px',
+        border: '1px solid #e0e0e0',
     },
     friendsList: {
         listStyle: 'none',
         padding: 0,
     },
     friendItem: {
-        padding: '5px 0',
+        padding: '8px 0',
         borderBottom: '1px solid #ddd',
+        fontSize: '16px',
+        fontFamily: 'Arial, sans-serif',
+        color: '#333',
     },
     searchBarContainer: {
         width: '100%',
         padding: '10px 20px',
         backgroundColor: '#ffffff',
-        borderTop: '1px solid #ddd',
-        boxShadow: '0 -2px 4px rgba(0,0,0,0.1)',
+        borderRadius: '12px',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        borderTop: '1px solid #e0e0e0',
+        marginTop: '20px',
     },
 };
 

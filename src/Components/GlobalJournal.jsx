@@ -29,11 +29,10 @@ const Journal = () => {
                 const username = localStorage.getItem("username");
 
                 const response = await axios.post('http://localhost:1000/api/createPost', {
-                    username: username, // Replace with actual username
+                    username: username,
                     message: tweet,
                 });
 
-                // Add the new tweet to the list
                 setTweets([response.data, ...tweets]);
                 setTweet('');
             } catch (error) {
@@ -50,7 +49,7 @@ const Journal = () => {
                     onTweetChange={handleTweetChange}
                     onTweetSubmit={handleTweetSubmit}
                 />
-                <TweetList tweets={tweets} />
+                <TweetList tweets={tweets} setTweets={setTweets} />
             </div>
             <FriendsWidget />
             <SearchBar />
@@ -75,37 +74,84 @@ const TweetInput = ({ tweet, onTweetChange, onTweetSubmit }) => (
 const TweetList = ({ tweets }) => (
     <div style={styles.tweetListContainer}>
         {tweets.map((tweet, index) => (
-            <Tweet key={index} content={tweet.message} username={tweet.username} />
+            <Tweet key={index} tweet={tweet} />
         ))}
     </div>
 );
 
-const Tweet = ({ content, username }) => {
+const Tweet = ({ tweet }) => {
     const [showReply, setShowReply] = useState(false);
+    const [reply, setReply] = useState('');
 
     const toggleReply = () => {
         setShowReply(!showReply);
     };
 
+    const handleReplyChange = (e) => {
+        setReply(e.target.value);
+    };
+
+    const handleReplySubmit = async (e) => {
+        e.preventDefault();
+        if (reply.trim()) {
+            try {
+                const username = localStorage.getItem("username");
+
+                const response = await axios.post('http://localhost:1000/api/createReply', {
+                    username: username,
+                    message: reply,
+                    chatTableName: tweet.chatTableName,
+                    postId: tweet.id
+                });
+
+                console.log('Reply posted successfully:', response.data);
+                setReply('');
+            } catch (error) {
+                console.error('Error posting reply:', error.response ? error.response.data : error.message);
+            }
+        }
+    };
+
     return (
         <div style={styles.tweetContainer}>
-            <p><strong>{username}</strong>: {content}</p>
+            <p><strong>{tweet.username}</strong>: {tweet.message}</p>
             <button onClick={toggleReply} style={styles.replyButton}>
                 Reply
             </button>
-            {showReply && <Reply />}
+            {showReply && (
+                <Reply
+                    reply={reply}
+                    onReplyChange={handleReplyChange}
+                    onReplySubmit={handleReplySubmit}
+                />
+            )}
+            <ReplyList replies={tweet.replies} />
         </div>
     );
 };
 
-const Reply = () => (
+const Reply = ({ reply, onReplyChange, onReplySubmit }) => (
     <div style={styles.replyContainer}>
-        <input
-            type="text"
-            placeholder="Write a reply..."
-            style={styles.input}
-        />
-        <button style={styles.button}>Reply</button>
+        <form onSubmit={onReplySubmit}>
+            <input
+                type="text"
+                value={reply}
+                onChange={onReplyChange}
+                placeholder="Write a reply..."
+                style={styles.input}
+            />
+            <button type="submit" style={styles.button}>Reply</button>
+        </form>
+    </div>
+);
+
+const ReplyList = ({ replies }) => (
+    <div style={styles.replyListContainer}>
+        {replies && replies.map((reply, index) => (
+            <div key={index} style={styles.replyItem}>
+                <p><strong>{reply.username}</strong>: {reply.message}</p>
+            </div>
+        ))}
     </div>
 );
 
@@ -146,17 +192,9 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-between',
         height: '100vh',
-        backgroundColor: '#f0f8ff', // light blue theme
+        backgroundColor: '#f0f8ff',
         color: '#333',
         fontFamily: 'Arial, sans-serif',
-    },
-    header: {
-        width: '100%',
-        padding: '10px 20px',
-        backgroundColor: '#ffffff',
-        borderBottom: '1px solid #ddd',
-        textAlign: 'center',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     },
     mainContent: {
         flex: 1,
@@ -216,6 +254,16 @@ const styles = {
         marginTop: '10px',
         display: 'flex',
         alignItems: 'center',
+    },
+    replyListContainer: {
+        marginTop: '10px',
+    },
+    replyItem: {
+        marginTop: '10px',
+        backgroundColor: '#f9f9f9',
+        padding: '10px',
+        borderRadius: '10px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
     },
     input: {
         flex: 1,

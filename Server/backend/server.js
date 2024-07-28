@@ -25,14 +25,14 @@ const db = new sqlite3.Database('../db/collection.db', (err) => {
 });
 
 db.serialize(() => {
-    db.run(`CREATE TABLE challenges (
+    db.run(`CREATE TABLE IF NOT EXISTS challenges (
         id INTEGER PRIMARY KEY,
         text TEXT,
         creator TEXT,
         completedCount INTEGER DEFAULT 0
     )`);
 
-    db.run(`CREATE TABLE participants (
+    db.run(`CREATE TABLE IF NOT EXISTS participants (
         challengeId INTEGER,
         username TEXT,
         FOREIGN KEY(challengeId) REFERENCES challenges(id)

@@ -9,8 +9,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 32px;
+    margin-left: 32px;
     flex-direction: column;
+    background-color: #243132;
     height: 100vh;
 }
 ul, a {

@@ -92,10 +92,6 @@ app.post('/api/register', async (req, res) => {
         } catch {
             console.log("d")
         }
-        
-        console.log("u")
-        
-        console.log("c")
         let lastIndex;
         try {
             lastIndex = await getLastIndexOfUsers();

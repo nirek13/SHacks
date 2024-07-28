@@ -52,7 +52,7 @@ const Journal = () => {
                 <TweetList tweets={tweets} setTweets={setTweets} />
             </div>
    
-            <SearchBar />
+
         </div>
     );
 };

@@ -5,6 +5,7 @@ import './ChallengeBoard.css';
 const ChallengeBoard = () => {
     const [challenges, setChallenges] = useState([]);
     const [newChallenge, setNewChallenge] = useState('');
+    const [completedChallenges, setCompletedChallenges] = useState(new Set());
 
     useEffect(() => {
         const fetchChallenges = async () => {
@@ -49,12 +50,28 @@ const ChallengeBoard = () => {
 
     const completeChallenge = async (id) => {
         try {
-            let i = String(localStorage.getItem("completed-challenges"))
-            console.log(i)
-            if (!i){localStorage.setItem("completed-challenges", 1)}
-            else { localStorage.setItem("completed-challenges", i+1)}
-            const response = await axios.post(`http://localhost:1000/api/completeChallenge/${id}`);
-            setChallenges(challenges.map(challenge => challenge.id === id ? response.data : challenge));
+            let i = String(localStorage.getItem("completed-challenges"));
+            if (!i) {
+                localStorage.setItem("completed-challenges", 1);
+            } else {
+                localStorage.setItem("completed-challenges", parseInt(i) + 1);
+            }
+            
+            // Add the challenge ID to the completedChallenges set
+            setCompletedChallenges(new Set([...completedChallenges, id]));
+
+            setTimeout(async () => {
+                const response = await axios.post(`http://localhost:1000/api/completeChallenge/${id}`);
+                
+                // Remove the challenge from the state after the animation
+                setChallenges(prevChallenges => prevChallenges.filter(challenge => challenge.id !== id));
+                // Remove the challenge ID from the completedChallenges set
+                setCompletedChallenges(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(id);
+                    return newSet;
+                });
+            }, 500); // Match the animation duration
         } catch (error) {
             console.error('Error completing challenge:', error);
         }
@@ -75,7 +92,10 @@ const ChallengeBoard = () => {
             </div>
             <ul className="challenge-list">
                 {challenges.map((challenge) => (
-                    <li key={challenge.id} className="challenge-item">
+                    <li 
+                        key={challenge.id} 
+                        className={`challenge-item ${completedChallenges.has(challenge.id) ? 'fade-down' : ''}`}
+                    >
                         <div className="challenge-text">
                             <span>{challenge.text} (created by {challenge.creator})</span>
                             <button onClick={() => joinChallenge(challenge.id)} className="join-button">Join Challenge</button>

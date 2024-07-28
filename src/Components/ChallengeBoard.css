@@ -5,12 +5,14 @@
     max-width: 600px;
     margin: 0 auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all ease-in-out 0.3s;
 }
 
 .input-container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    transition: all ease-in-out 0.3s;
 }
 
 .input-field {
@@ -19,6 +21,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-right: 10px;
+    transition: all ease-in-out 0.3s;
     font-size: 16px;
 }
 
@@ -39,6 +42,7 @@
 .challenge-list {
     list-style: none;
     padding: 0;
+    transition: all ease-in-out 0.3s;
 }
 
 .challenge-item {
@@ -47,6 +51,12 @@
     border-radius: 5px;
     margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease-out , opacity 0.5s ease-out;
+}
+
+.challenge-item.fade-down {
+    transform: translateY(20px);
+    opacity: 0;
 }
 
 .challenge-text {
@@ -74,6 +84,7 @@
     list-style: none;
     padding: 0;
     margin-top: 10px;
+    transition: all ease-in-out 0.3s;
 }
 
 .participant-item {

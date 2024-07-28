@@ -194,7 +194,6 @@ const SearchBar = () => (
         />
     </div>
 );
-
 const styles = {
     appContainer: {
         display: 'flex',

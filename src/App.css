@@ -5,9 +5,7 @@
   overflow-x: hidden;
   padding: 48px 64px;
 }
-body {
-  background-color: #314445;
-}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -20,7 +18,6 @@ body {
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

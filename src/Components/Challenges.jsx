@@ -49,6 +49,10 @@ const ChallengeBoard = () => {
 
     const completeChallenge = async (id) => {
         try {
+            let i = localStorage.getItem("completed-challenges")
+            console.log(i)
+            if (!i){localStorage.setItem("completed-challenges", 1)}
+            else { localStorage.setItem("completed-challenges", i+1)}
             const response = await axios.post(`http://localhost:1000/api/completeChallenge/${id}`);
             setChallenges(challenges.map(challenge => challenge.id === id ? response.data : challenge));
         } catch (error) {

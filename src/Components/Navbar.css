@@ -1,96 +1,107 @@
 .navbar {
-  background-color: #ffffff; /* Coral color */
-  padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
+    position: relative;
+    background-color: #87cefa;
+    padding: 1.2rem;
 }
 
+/* Container to align items and control spacing */
 .navbar-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+    display: flex;
+    justify-content: flex-end; /* Aligns items to the right */
+    padding-left: 400px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.navbar-logo {
-  color: #111111; /* White color */
-  text-decoration: none;
-  font-size: 2rem;
-  font-weight: bold;
-  width:10px;
-
-}
-
-
-.navbar-toggler {
-  display: none; /* Hide by default */
-  background: none;
-  border: none;
-  color: #111111; /* White color */
-  font-size: 2rem;
-}
-
+/* Style for the navigation menu */
 .navbar-menu {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
 }
 
+/* Style for individual menu items */
 .navbar-item {
-  margin-left: 1.2rem;
+    margin-left: 1.2rem;
+    position: relative;
 }
 
+/* Link styling with transitions */
 .navbar-link {
-  color: #111111; /* White color */
-  text-decoration: none;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+    color: #FFFF; /* Default color */
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
+/* Hover effect for links */
 .navbar-link:hover {
-  background-color: #ffa07a; /* Light Salmon color */
-  color: #000000; /* Black color */
+    color: #e7e7e7; /* Shiny effect color */
 }
 
+/* Icon styling with border */
 .navbar-icon {
-  margin-right: 0.5rem;
-  font-size: 2rem; /* Adjusted size */
-
+    margin-right: 0.5rem;
+    padding-left: 100px;
+    font-size: 1.5rem; /* Adjusted size */
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions */
+    border: 2px solid transparent; /* Default border */
+    border-radius: 50%; /* Circular border */
+    padding: 0.3rem; /* Space inside border */
 }
 
-.navbar-icon2{
-  margin-right: 0.5rem;
-  font-size: 1.5rem; /* Adjusted size */
-  width: 150px;
-  height: 70px;
-
+/* Hover effect for icons */
+.navbar-link:hover .navbar-icon {
+    color: #e7e7e7; /* Shiny effect color */
+    transform: scale(1.14); /* Pop effect */
+    text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
+    border-color: #e7e7e7; /* Border color on hover */
 }
+
+/* Logo styling */
+.navbar-logo {
+    position: absolute; /* Positioned on the left */
+    left: 0;
+    padding-left: 24px;
+    color: #FFFF; /* Default color */
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bolder;
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease; /* Smooth transitions */
+}
+
+/* Hover effect for logo */
+.navbar-logo:hover {
+    color: #e7e7e7; /* Shiny effect color */
+    transform: scale(1.075); /* Pop effect */
+    text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
+}
+
+/* Toggler for mobile view */
+.navbar-toggler {
+    display: none; /* Hide by default */
+    background: none;
+    border: none;
+    color: #FFFF;
+    font-size: 2rem;
+}
+
 /* Mobile styles */
 @media screen and (max-width: 768px) {
-  .navbar-menu {
-    flex-direction: column;
-    display: none;
-    width: 100%;
-    text-align: center;
-  }
+    .navbar-menu {
+        flex-direction: column;
+        display: none;
+    }
 
-  .navbar-menu.active {
-    display: flex;
-  }
+    .navbar-menu.active {
+        display: flex;
+    }
 
-  .navbar-item {
-    margin-left: 0;
-    margin-bottom: 1rem;
-  }
-
-  .navbar-toggler {
-    display: block;
-  }
+    .navbar-toggler {
+        display: block;
+    }
 }

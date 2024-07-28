@@ -19,7 +19,7 @@ const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor 
             // Animate sphere scale for a peaceful effect
             const time = clock.getElapsedTime();
             const oscillation = Math.sin(time * 2) * 0.1 + 1;
-            const newScale = scale * oscillation;
+            const newScale = Math.min(scale * oscillation, 1.3); // Ensure scale does not exceed 1.3
             sphereRef.current.scale.set(newScale, newScale, newScale);
 
             // Update scale and color states
@@ -30,92 +30,98 @@ const RotatingSphere = ({ prompt, mousePosition, setSphereScale, setSphereColor 
 
     useEffect(() => {
         // Update sphere properties based on the current prompt
+        let newScale = 1;
+        let newColor = '#87CEFA'; // Default color
+
         switch (prompt) {
             case 'Inhale deeply':
-                setScale(1);
-                setColor('#87CEFA'); // Light Blue
+                newScale = 1;
+                newColor = '#87CEFA'; // Light Blue
                 break;
             case 'Hold your breath for a moment':
-                setScale(1);
-                setColor('#00BFFF'); // Deep Sky Blue
+                newScale = 1;
+                newColor = '#00BFFF'; // Deep Sky Blue
                 break;
             case 'Exhale slowly':
-                setScale(1);
-                setColor('#FFD700'); // Gold
+                newScale = 1;
+                newColor = '#FFD700'; // Gold
                 break;
             case 'Feel the calmness wash over you':
-                setScale(1.2);
-                setColor('#90EE90'); // Light Green
+                newScale = 1.2;
+                newColor = '#90EE90'; // Light Green
                 break;
             case 'Stare deep into the expanding and contracting circles':
-                setScale(1.3);
-                setColor('#FF69B4'); // Hot Pink
+                newScale = 1.3;
+                newColor = '#FF69B4'; // Hot Pink
                 break;
             case 'Let your mind drift with the movement of the particles':
-                setScale(1.4);
-                setColor('#FFA07A'); // Light Salmon
+                newScale = 1.3;
+                newColor = '#FFA07A'; // Light Salmon
                 break;
             case 'As you breathe in, feel the particles come closer':
-                setScale(1.5);
-                setColor('#20B2AA'); // Light Sea Green
+                newScale = 1.3;
+                newColor = '#20B2AA'; // Light Sea Green
                 break;
             case 'As you breathe out, let the particles float further apart':
-                setScale(1.6);
-                setColor('#9370DB'); // Medium Purple
+                newScale = 1.3;
+                newColor = '#9370DB'; // Medium Purple
                 break;
             case 'Embrace the serenity of the moment':
-                setScale(1.7);
-                setColor('#4682B4'); // Steel Blue
+                newScale = 1.3;
+                newColor = '#4682B4'; // Steel Blue
                 break;
             case 'Focus on the gentle rise and fall of your breath':
-                setScale(1.8);
-                setColor('#B0E0E6'); // Powder Blue
+                newScale = 1.1;
+                newColor = '#B0E0E6'; // Powder Blue
                 break;
             case 'Imagine the particles dancing in harmony with your breathing':
-                setScale(1.9);
-                setColor('#FFC0CB'); // Pink
+                newScale = 1;
+                newColor = '#FFC0CB'; // Pink
                 break;
             case 'With each inhale, draw in positive energy':
-                setScale(2.0);
-                setColor('#7FFFD4'); // Aquamarine
+                newScale = 0.9;
+                newColor = '#7FFFD4'; // Aquamarine
                 break;
             case 'With each exhale, release all tension and negativity':
-                setScale(2.1);
-                setColor('#FF4500'); // Orange Red
+                newScale = 1;
+                newColor = '#FF4500'; // Orange Red
                 break;
             case 'Visualize yourself surrounded by a tranquil, blue light':
-                setScale(2.2);
-                setColor('#1E90FF'); // Dodger Blue
+                newScale = 0.9;
+                newColor = '#1E90FF'; // Dodger Blue
                 break;
             case 'Feel the light expanding and contracting with each breath':
-                setScale(2.3);
-                setColor('#32CD32'); // Lime Green
+                newScale = 0.8;
+                newColor = '#32CD32'; // Lime Green
                 break;
             case 'Allow your mind to wander to a peaceful place':
-                setScale(2.4);
-                setColor('#FFDAB9'); // Peach Puff
+                newScale = 0.7;
+                newColor = '#FFDAB9'; // Peach Puff
                 break;
             case 'Notice how the particles respond to your calmness':
-                setScale(2.5);
-                setColor('#8A2BE2'); // Blue Violet
+                newScale = 0.6;
+                newColor = '#8A2BE2'; // Blue Violet
                 break;
             case 'Let go of all thoughts and just be in the moment':
-                setScale(2.6);
-                setColor('#00CED1'); // Dark Turquoise
+                newScale = 0.4;
+                newColor = '#00CED1'; // Dark Turquoise
                 break;
             case 'Feel a sense of unity with the particles around you':
-                setScale(2.7);
-                setColor('#FF6347'); // Tomato
+                newScale = 0.3;
+                newColor = '#FF6347'; // Tomato
                 break;
             case 'Embrace the peacefulness of this experience':
-                setScale(2.8);
-                setColor('#2E8B57'); // Sea Green
+                newScale = 0.2;
+                newColor = '#2E8B57'; // Sea Green
                 break;
             default:
-                setScale(1);
-                setColor('#87CEFA'); // Default color
+                newScale = 0.4;
+                newColor = '#87CEFA'; // Default color
                 break;
         }
+
+        setScale(newScale);
+        setColor(newColor);
     }, [prompt]);
 
     return (
@@ -200,7 +206,7 @@ const TextOverlay = ({ prompt }) => {
 
 // Main Scene Component
 const MeditationScene = () => {
-    const [prompt, setPrompt] = useState('inhale');
+    const [prompt, setPrompt] = useState('Inhale deeply');
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [sphereScale, setSphereScale] = useState(1);
     const [sphereColor, setSphereColor] = useState('#87CEFA'); // Initial color

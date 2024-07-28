@@ -3,10 +3,11 @@
   display: flex;
   width: 100vw;
   overflow-x: hidden;
-  justify-content: space-between;
   padding: 48px 64px;
 }
-
+body {
+  background-color: #314445;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

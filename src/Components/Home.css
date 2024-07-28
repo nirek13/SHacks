@@ -1,0 +1,20 @@
+.home-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('./Oasis.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+#fullname {
+    color: white;
+    font-size: 3rem;
+    transition: transform 0.1s ease-out, filter 0.1s ease-out;
+    text-align: left;
+}
+
+:root {
+    --name-shadow: rgba(0, 0, 0, 0.5); /* Adjust the shadow color as needed */
+}

@@ -1,6 +1,5 @@
-/* Navbar Container */
 .navbar {
-  background-color: #33333300;
+  background-color: #ffaf77; /* Coral color */
   padding: 1.2rem;
 }
 
@@ -12,22 +11,21 @@
   margin: 0 auto;
 }
 
-/* Logo Styling */
 .navbar-logo {
-  color: #00ddfa;
+  color: #ffffff; /* White color */
   text-decoration: none;
   font-size: 2rem;
   font-weight: bold;
-  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
-.navbar-logo:hover {
-  color: #00ffea;
-  transform: scale(1.2);
-  text-shadow: 0 0 5px rgba(0, 217, 255, 0.8);
+.navbar-toggler {
+  display: none; /* Hide by default */
+  background: none;
+  border: none;
+  color: #ffffff; /* White color */
+  font-size: 2rem;
 }
 
-/* Menu Styling */
 .navbar-menu {
   list-style: none;
   display: flex;
@@ -37,76 +35,48 @@
 
 .navbar-item {
   margin-left: 1.2rem;
-  position: relative;
 }
 
 .navbar-link {
-  color: #00ddfa;
+  color: #ffffff; /* White color */
   text-decoration: none;
   font-size: 1.2rem;
   display: flex;
   align-items: center;
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions */
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 
 .navbar-link:hover {
-  color: #00ffea;
+  background-color: #ffa07a; /* Light Salmon color */
+  color: #000000; /* Black color */
 }
 
 .navbar-icon {
   margin-right: 0.5rem;
-  font-size: 1.5rem;
-  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, border 0.3s ease;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  padding: 0.3rem;
+  font-size: 1.5rem; /* Adjusted size */
 }
 
-.navbar-link:hover .navbar-icon {
-  color: #00ffea;
-  transform: scale(1.2);
-  text-shadow: 0 0 5px rgba(0, 217, 255, 0.8);
-  border-color: #00ffea;
-}
-
-/* Toggler Styling */
-.navbar-toggler {
-  display: none;
-  background: none;
-  border: none;
-  color: #00ddfa;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-/* Mobile Styles */
+/* Mobile styles */
 @media screen and (max-width: 768px) {
   .navbar-menu {
     flex-direction: column;
     display: none;
     width: 100%;
-    background-color: #333;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    text-align: center;
   }
 
   .navbar-menu.active {
     display: flex;
   }
 
+  .navbar-item {
+    margin-left: 0;
+    margin-bottom: 1rem;
+  }
+
   .navbar-toggler {
     display: block;
-  }
-
-  .navbar-item {
-    width: 100%;
-    text-align: center;
-    margin: 0;
-  }
-
-  .navbar-link {
-    width: 100%;
-    padding: 1rem 0;
   }
 }

@@ -1,20 +1,56 @@
+/* sidebar.css */
+
+.navbar-menu {
+    width: 250px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
 .circular-image {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    display: block;
-    object-fit: cover; /* Ensures the image covers the entire circle without distortion */
+    object-fit: cover;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.navbar-menu {
+
+.navbar-item {
+    text-align: center;
+    list-style: none;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.navbar-link {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background-color: #ffff;
-    height: 100vh;
+
+   
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
-ul, a {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+.navbar-link:hover {
+    background-color: #f0f0f0;
+}
+
+.navbar-link img {
+    margin-right: 10px;
+}
+
+.navbar-item div {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
 }

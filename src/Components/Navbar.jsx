@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { FaHome, FaUser, FaCogs, FaEnvelope } from 'react-icons/fa';
 import Oasis from './Oasis.png';
-import {SiMediamarkt} from "react-icons/si";
+import { SiMediamarkt } from 'react-icons/si';
+
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -14,7 +15,6 @@ function Navbar() {
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo">
                     <img src={Oasis} alt="Meditation App Logo" className="navbar-icon2" />
-
                 </Link>
                 <button className="navbar-toggler" onClick={toggleMenu}>
                     ☰

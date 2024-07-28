@@ -1,96 +1,72 @@
 /* Navbar.css */
 
 .navbar {
-    background-color: #a81d1d;
+    background-color: #bd1c1c;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 20px; /* Rounded corners */
-    padding: 10px 20px;
-    margin: 10px;
+    border-radius: 50%; /* Circular shape */
+    padding: 10px;
+
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     position: relative;
+    margin: 20px auto; /* Center horizontally on the page */
+    overflow: hidden; /* Ensure child elements are contained within the circular shape */
 }
 
 .navbar-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
+    height: 70%;
 }
 
 .navbar-logo {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
 }
 
 .navbar-icon2 {
-    height: 40px;
-    margin-right: 10px;
+    height: 60px; /* Adjust the size to fit well within the circle */
 }
 
 .navbar-toggler {
-
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;
-    display: none;
 }
 
 .navbar-menu {
-    list-style: none;
-    display: flex;
+    display: none;
+    flex-direction: column;
     align-items: center;
-    margin: 0;
-    padding: 0;
+    background-color: #0de79d;
+
+
 }
 
 .navbar-menu.active {
-    display: block;
+    display: flex;
 }
 
 .navbar-item {
-    margin: 0 10px;
+    margin: 5px 0;
 }
 
 .navbar-link {
-    text-decoration: none;
-    color: #333;
     display: flex;
     align-items: center;
-    padding: 5px 10px;
-    border-radius: 10px; /* Rounded corners for items */
-    transition: background-color 0.3s;
-}
-
-.navbar-link:hover {
-    background-color: #f0f0f0;
+    text-decoration: none;
+    color: #333;
 }
 
 .navbar-icon {
     margin-right: 5px;
-    font-size: 18px;
-}
-
-@media (max-width: 768px) {
-    .navbar-toggler {
-        display: block;
-    }
-
-    .navbar-menu {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        background-color: #e80808;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 20px; /* Rounded corners */
-        padding: 10px 0;
-    }
-
-    .navbar-item {
-        margin: 10px 0;
-    }
 }

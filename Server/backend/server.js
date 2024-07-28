@@ -276,7 +276,8 @@ app.post('/api/createReply', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Error inserting into replies table', message: err.message });
         }
-        res.status(201).json({ message: 'Reply posted successfully' });
+        
+        res.status(201).json({ message: message });
     });
 });
 

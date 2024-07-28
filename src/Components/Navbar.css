@@ -1,105 +1,112 @@
+/* Navbar Container */
 .navbar {
-    background-color: #33333300;
-    padding: 1.2rem;
-  }
-  
-  .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .navbar-logo {
-    color: #00ddfa;
-    text-decoration: none;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  
+  background-color: #33333300;
+  padding: 1.2rem;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Logo Styling */
+.navbar-logo {
+  color: #00ddfa;
+  text-decoration: none;
+  font-size: 2rem;
+  font-weight: bold;
+  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navbar-logo:hover {
+  color: #00ffea;
+  transform: scale(1.2);
+  text-shadow: 0 0 5px rgba(0, 217, 255, 0.8);
+}
+
+/* Menu Styling */
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item {
+  margin-left: 1.2rem;
+  position: relative;
+}
+
+.navbar-link {
+  color: #00ddfa;
+  text-decoration: none;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-link:hover {
+  color: #00ffea;
+}
+
+.navbar-icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, border 0.3s ease;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  padding: 0.3rem;
+}
+
+.navbar-link:hover .navbar-icon {
+  color: #00ffea;
+  transform: scale(1.2);
+  text-shadow: 0 0 5px rgba(0, 217, 255, 0.8);
+  border-color: #00ffea;
+}
+
+/* Toggler Styling */
+.navbar-toggler {
+  display: none;
+  background: none;
+  border: none;
+  color: #00ddfa;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
   .navbar-menu {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .navbar-item {
-    margin-left: 1.2rem;
-    position: relative;
-  }
-  
-  .navbar-link {
-    color: #00ddfa; /* Default color */
-    text-decoration: none;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
-  }
-  
-  /* Hover effect for the entire link */
-  .navbar-link:hover {
-    color: #00ffea; /* Shiny effect color */
-  }
-  
-  /* Icon styling */
-  .navbar-icon {
-    margin-right: 0.5rem;
-    font-size: 1.5rem; /* Adjusted size */
-    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease, border 0.3s ease; /* Smooth transitions */
-    border: 2px solid transparent; /* Default border */
-    border-radius: 50%; /* Make it circular */
-    padding: 0.3rem; /* Space inside border */
-  }
-  
-  /* Apply the hover effect to the icon */
-  .navbar-link:hover .navbar-icon {
-    color: #00ffea; /* Shiny effect color */
-    transform: scale(1.2); /* Pop effect */
-    text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
-    border-color: #00ffea; /* Border color on hover */
-  }
-  
-  /* Logo hover effect */
-  .navbar-logo {
-    left: 0;
-    padding-left: 24px;
+    flex-direction: column;
+    display: none;
+    width: 100%;
+    background-color: #333;
     position: absolute;
-    color: #00ddfa; /* Default color */
-    text-decoration: none;
-    font-size: 2rem;
-    font-weight: bolder;
-    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease; /* Smooth transitions */
+    top: 100%;
+    left: 0;
   }
-  
-  .navbar-logo:hover {
-    color: #00ffea; /* Shiny effect color */
-    transform: scale(1.2); /* Pop effect */
-    text-shadow: 0 0 5px rgba(0, 217, 255, 0.8); /* Glow effect */
+
+  .navbar-menu.active {
+    display: flex;
   }
-  
+
   .navbar-toggler {
-    display: none; /* Hide by default */
-    background: none;
-    border: none;
-    color: #00ddfa;
-    font-size: 2rem;
+    display: block;
   }
-  
-  /* Mobile styles */
-  @media screen and (max-width: 768px) {
-    .navbar-menu {
-      flex-direction: column;
-      display: none;
-    }
-  
-    .navbar-menu.active {
-      display: flex;
-    }
-  
-    .navbar-toggler {
-      display: block;
-    }
+
+  .navbar-item {
+    width: 100%;
+    text-align: center;
+    margin: 0;
   }
+
+  .navbar-link {
+    width: 100%;
+    padding: 1rem 0;
+  }
+}

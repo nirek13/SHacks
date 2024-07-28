@@ -11,18 +11,21 @@ const SideBar = () => {
     console.log(user)
     return (
         <>
-            
-            {user == "nirek" && 
-                <>
-                    <img src="./nirek.png" />
-                    <div>nirek</div>
-                </>
-            }
-            {user == "louis" && 
-                <div className={`navbar-menu`}>
+            <div className={`navbar-menu`}>
                     <div style={{display: "flex", flexDirection: "column"}}>
-                    <img className="circular-image" src={Nirek} />
-                    <div>Louis</div>
+                    {user == "nirek" && 
+                        <>
+                            <img className="circular-image" src={Nirek} />
+                            <div>Nirek</div>
+                        </>
+                    }
+                    {user == "louis" && 
+                        <>
+                            <img className="circular-image" src={Nirek} />
+                            <div>Louis</div>
+                        </>
+                    }
+                    
                     </div>
                     
                     <ul >
@@ -47,6 +50,9 @@ const SideBar = () => {
 
                     </ul>
                 </div>
+            
+            {user == "louis" && 
+                
             }
         </>
         

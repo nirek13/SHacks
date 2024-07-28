@@ -24,6 +24,21 @@ const db = new sqlite3.Database('../db/collection.db', (err) => {
     }
 });
 
+db.serialize(() => {
+    db.run(`CREATE TABLE challenges (
+        id INTEGER PRIMARY KEY,
+        text TEXT,
+        creator TEXT,
+        completedCount INTEGER DEFAULT 0
+    )`);
+
+    db.run(`CREATE TABLE participants (
+        challengeId INTEGER,
+        username TEXT,
+        FOREIGN KEY(challengeId) REFERENCES challenges(id)
+    )`);
+});
+
 const readData = (file) => {
     console.log("shit")
     if (fs.existsSync(file)) {
@@ -139,31 +154,31 @@ const authenticate = (req, res, next) => {
     }
 };
 
-app.get('/api/challenges', authenticate, (req, res) => {
-    const challenges = readData(challengesFile);
-    res.json(challenges);
-});
+// app.get('/api/challenges', authenticate, (req, res) => {
+//     const challenges = readData(challengesFile);
+//     res.json(challenges);
+// });
 
-app.post('/api/challenges', authenticate, (req, res) => {
-    const newChallenge = req.body;
-    const challenges = readData(challengesFile);
-    challenges.push(newChallenge);
-    writeData(challengesFile, challenges);
-    res.status(201).json(newChallenge);
-});
+// app.post('/api/challenges', authenticate, (req, res) => {
+//     const newChallenge = req.body;
+//     const challenges = readData(challengesFile);
+//     challenges.push(newChallenge);
+//     writeData(challengesFile, challenges);
+//     res.status(201).json(newChallenge);
+// });
 
-app.post('/api/challenges/:index/join', authenticate, (req, res) => {
-    const { index } = req.params;
-    const { userName } = req.body;
-    const challenges = readData(challengesFile);
-    if (challenges[index]) {
-        challenges[index].participants.push(userName);
-        writeData(challengesFile, challenges);
-        res.json(challenges[index]);
-    } else {
-        res.status(404).json({ error: 'Challenge not found' });
-    }
-});
+// app.post('/api/challenges/:index/join', authenticate, (req, res) => {
+//     const { index } = req.params;
+//     const { userName } = req.body;
+//     const challenges = readData(challengesFile);
+//     if (challenges[index]) {
+//         challenges[index].participants.push(userName);
+//         writeData(challengesFile, challenges);
+//         res.json(challenges[index]);
+//     } else {
+//         res.status(404).json({ error: 'Challenge not found' });
+//     }
+// });
 
 const getNextChatTableNumber = () => {
     return new Promise((resolve, reject) => {
@@ -240,6 +255,102 @@ app.get('/api/feed', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: 'Server error', message: err.message });
     }
+});
+
+app.post('/api/createChallenge', (req, res) => {
+    const { username, text } = req.body;
+
+    if (!username || !text) {
+        return res.status(400).json({ error: 'Username and text are required' });
+    }
+
+    db.run(`INSERT INTO challenges (text, creator) VALUES (?, ?)`, [text, username], function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error creating challenge', message: err.message });
+        }
+
+        res.status(201).json({ id: this.lastID, text, creator: username, completedCount: 0, participants: [] });
+    });
+});
+
+app.post('/api/joinChallenge/:id', (req, res) => {
+    const { username } = req.body;
+    const { id } = req.params;
+
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
+    }
+
+    db.run(`INSERT INTO participants (challengeId, username) VALUES (?, ?)`, [id, username], function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error joining challenge', message: err.message });
+        }
+
+        db.get(`SELECT * FROM challenges WHERE id = ?`, [id], (err, challenge) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error retrieving challenge', message: err.message });
+            }
+
+            db.all(`SELECT username FROM participants WHERE challengeId = ?`, [id], (err, participants) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error retrieving participants', message: err.message });
+                }
+
+                challenge.participants = participants.map(p => p.username);
+                res.status(200).json(challenge);
+            });
+        });
+    });
+});
+
+app.post('/api/completeChallenge/:id', (req, res) => {
+    const { id } = req.params;
+
+    db.run(`UPDATE challenges SET completedCount = completedCount + 1 WHERE id = ?`, [id], function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error marking challenge as completed', message: err.message });
+        }
+
+        db.get(`SELECT * FROM challenges WHERE id = ?`, [id], (err, challenge) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error retrieving challenge', message: err.message });
+            }
+
+            db.all(`SELECT username FROM participants WHERE challengeId = ?`, [id], (err, participants) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error retrieving participants', message: err.message });
+                }
+
+                challenge.participants = participants.map(p => p.username);
+                res.status(200).json(challenge);
+            });
+        });
+    });
+});
+
+app.get('/api/challenges', (req, res) => {
+    db.all(`SELECT * FROM challenges`, (err, challenges) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error retrieving challenges', message: err.message });
+        }
+
+        const challengePromises = challenges.map(challenge => {
+            return new Promise((resolve, reject) => {
+                db.all(`SELECT username FROM participants WHERE challengeId = ?`, [challenge.id], (err, participants) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        challenge.participants = participants.map(p => p.username);
+                        resolve(challenge);
+                    }
+                });
+            });
+        });
+
+        Promise.all(challengePromises)
+            .then(results => res.status(200).json(results))
+            .catch(error => res.status(500).json({ error: 'Error retrieving participants', message: error.message }));
+    });
 });
 
 app.listen(PORT, () => {

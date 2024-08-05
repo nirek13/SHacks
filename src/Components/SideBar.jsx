@@ -46,7 +46,7 @@ const SideBar = () => {
                         <li className="navbar-item">
                             <Link to="/journal" className="navbar-link">
                               
-                                Journal
+                                Reflection
                             </Link>
                         </li>
                         <li className="navbar-item">

@@ -66,7 +66,7 @@ const TweetInput = ({ tweet, onTweetChange, onTweetSubmit }) => (
                 placeholder="What's happening?"
                 style={styles.textarea}
             />
-            <button type="submit" style={styles.button}>Tweet</button>
+            <button type="submit" style={styles.button}>Send Reflection</button>
         </form>
     </div>
 );
@@ -186,6 +186,7 @@ const styles = {
         backgroundColor: '#f5f5f5',
         color: '#333',
         fontFamily: 'Arial, sans-serif',
+        width: "100%",
         padding: '20px',
     },
     mainContent: {
@@ -220,8 +221,8 @@ const styles = {
         marginTop: '10px',
         padding: '10px 20px',
         border: 'none',
-        borderRadius: '8px',
-        backgroundColor: '#4CAF50',
+        borderRadius: '100px',
+        backgroundColor: '#000000',
         color: '#ffffff',
         cursor: 'pointer',
         fontSize: '16px',
@@ -232,7 +233,6 @@ const styles = {
     },
     tweetContainer: {
         width: '100%',
-        backgroundColor: '#ffffff',
         borderRadius: '12px',
         padding: '15px',
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)',

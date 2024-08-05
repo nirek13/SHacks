@@ -19,7 +19,7 @@ const Home = () => {
         { user &&
             <div className="dashboard">
                 <header className="header">
-                    <h1>Welcome to Your Mental Health Dashboard</h1>
+                    <h1>Mirror</h1>
                 </header>
                 {user === "nirek" &&
                     <div className="user-section">

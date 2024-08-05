@@ -53,7 +53,7 @@ const JournalInput = ({ entry, onEntryChange, onEntrySubmit }) => (
                 placeholder="What's on your mind?"
                 style={styles.textarea}
             />
-            <button type="submit" style={styles.button}>Log Journal Entry</button>
+            <button type="submit" style={styles.button}>Post Reflection</button>
         </form>
     </div>
 );
